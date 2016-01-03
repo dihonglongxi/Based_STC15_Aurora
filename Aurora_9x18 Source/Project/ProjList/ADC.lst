@@ -1,0 +1,316 @@
+C51 COMPILER V9.53.0.0   ADC                                                               03/25/2015 15:09:05 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE ADC
+OBJECT MODULE PLACED IN ..\ProjOut\ADC.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\ADC.c LARGE OPTIMIZE(8,SPEED) CODE PRINT(..\Pro
+                    -jList\ADC.lst) OBJECT(..\ProjOut\ADC.obj)
+
+line level    source
+
+   1          
+   2          
+   3          #include        "adc.h"
+   4          
+   5          
+   6          //========================================================================
+   7          // 函数: void   ADC_Inilize(ADC_InitTypeDef *ADCx)
+   8          // 描述: ADC初始化程序.
+   9          // 参数: ADCx: 结构参数,请参考adc.h里的定义.
+  10          // 返回: none.
+  11          // 版本: V1.0, 2012-10-22
+  12          //========================================================================
+  13          void    ADC_Inilize(ADC_InitTypeDef *ADCx)
+  14          {
+  15   1              P1ASF = ADCx->ADC_Px;
+  16   1              ADC_CONTR = (ADC_CONTR & ~ADC_90T) | ADCx->ADC_Speed;
+  17   1              if(ADCx->ADC_Power == ENABLE)   ADC_CONTR |= 0x80;
+  18   1              else                                                    ADC_CONTR &= 0x7F;
+  19   1              if(ADCx->ADC_AdjResult == ADC_RES_H2L8) PCON2 |=  (1<<5);       //10位AD结果的高2位放ADC_RES的低2位，低8位在ADC
+             -_RESL。
+  20   1              else                                                                    PCON2 &= ~(1<<5);       //10位AD结果的高8位放ADC_RES，低2位在ADC_RESL的低2位。
+  21   1              if(ADCx->ADC_Interrupt == ENABLE)       EADC = 1;                       //中断允许              ENABLE,DISABLE
+  22   1              else                                                            EADC = 0;
+  23   1              if(ADCx->ADC_Polity == PolityHigh)      PADC = 1;               //优先级设置    PolityHigh,PolityLow
+  24   1              else                                                            PADC = 0;
+  25   1      }
+  26          
+  27          
+  28          //========================================================================
+  29          // 函数: void   ADC_PowerControl(u8 pwr)
+  30          // 描述: ADC电源控制程序.
+  31          // 参数: pwr: 电源控制,ENABLE或DISABLE.
+  32          // 返回: none.
+  33          // 版本: V1.0, 2012-10-22
+  34          //========================================================================
+  35          void    ADC_PowerControl(u8 pwr)
+  36          {
+  37   1              if(pwr == ENABLE)       ADC_CONTR |= 0x80;
+  38   1              else                            ADC_CONTR &= 0x7f;
+  39   1      }
+  40          
+  41          //========================================================================
+  42          // 函数: u16    Get_ADC10bitResult(u8 channel)
+  43          // 描述: 查询法读一次ADC结果.
+  44          // 参数: channel: 选择要转换的ADC.
+  45          // 返回: 10位ADC结果.
+  46          // 版本: V1.0, 2012-10-22
+  47          //========================================================================
+  48          u16     Get_ADC10bitResult(u8 channel)  //channel = 0~7
+  49          {
+  50   1              u16     adc;
+  51   1              u8      i;
+  52   1      
+  53   1              if(channel > ADC_CH7)   return  1024;   //错误,返回1024,调用的程序判断  
+C51 COMPILER V9.53.0.0   ADC                                                               03/25/2015 15:09:05 PAGE 2   
+
+  54   1              ADC_RES = 0;
+  55   1              ADC_RESL = 0;
+  56   1      
+  57   1              ADC_CONTR = (ADC_CONTR & 0xe0) | ADC_START | channel; 
+  58   1              NOP(4);                 //对ADC_CONTR操作后要4T之后才能访问
+  59   1      
+  60   1              for(i=0; i<250; i++)            //超时
+  61   1              {
+  62   2                      if(ADC_CONTR & ADC_FLAG)
+  63   2                      {
+  64   3                              ADC_CONTR &= ~ADC_FLAG;
+  65   3                              if(PCON2 &  (1<<5))             //10位AD结果的高2位放ADC_RES的低2位，低8位在ADC_RESL。
+  66   3                              {
+  67   4                                      adc = (u16)(ADC_RES & 3);
+  68   4                                      adc = (adc << 8) | ADC_RESL;
+  69   4                              }
+  70   3                              else            //10位AD结果的高8位放ADC_RES，低2位在ADC_RESL的低2位。
+  71   3                              {
+  72   4                                      adc = (u16)ADC_RES;
+  73   4                                      adc = (adc << 2) | (ADC_RESL & 3);
+  74   4                              }
+  75   3                              return  adc;
+  76   3                      }
+  77   2              }
+  78   1              return  1024;   //错误,返回1024,调用的程序判断
+  79   1      }
+  80          
+  81          
+  82          //========================================================================
+  83          // 函数: void ADC_int(void) interrupt ADC_VECTOR
+  84          // 描述: ADC中断函数.
+  85          // 参数: none.
+  86          // 返回: none.
+  87          // 版本: V1.0, 2012-10-22
+  88          //========================================================================
+  89          void ADC_int (void) interrupt ADC_VECTOR
+  90          {
+  91   1              ADC_CONTR &= ~ADC_FLAG;
+  92   1      }
+  93          
+  94          
+C51 COMPILER V9.53.0.0   ADC                                                               03/25/2015 15:09:05 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _ADC_Inilize (BEGIN)
+                                           ; SOURCE LINE # 13
+;---- Variable 'ADCx' assigned to Register 'R1/R2/R3' ----
+                                           ; SOURCE LINE # 14
+                                           ; SOURCE LINE # 15
+0000 120000      E     LCALL   ?C?CLDPTR
+0003 F59D              MOV     P1ASF,A
+                                           ; SOURCE LINE # 16
+0005 900001            MOV     DPTR,#01H
+0008 120000      E     LCALL   ?C?CLDOPTR
+000B FF                MOV     R7,A
+000C E5BC              MOV     A,ADC_CONTR
+000E 549F              ANL     A,#09FH
+0010 4F                ORL     A,R7
+0011 F5BC              MOV     ADC_CONTR,A
+                                           ; SOURCE LINE # 17
+0013 900002            MOV     DPTR,#02H
+0016 120000      E     LCALL   ?C?CLDOPTR
+0019 B40105            CJNE    A,#01H,?C0001
+001C 43BC80            ORL     ADC_CONTR,#080H
+001F 8003              SJMP    ?C0002
+0021         ?C0001:
+                                           ; SOURCE LINE # 18
+0021 53BC7F            ANL     ADC_CONTR,#07FH
+0024         ?C0002:
+                                           ; SOURCE LINE # 19
+0024 900003            MOV     DPTR,#03H
+0027 120000      E     LCALL   ?C?CLDOPTR
+002A B40105            CJNE    A,#01H,?C0003
+002D 439720            ORL     PCON2,#020H
+0030 8003              SJMP    ?C0004
+0032         ?C0003:
+                                           ; SOURCE LINE # 20
+0032 5397DF            ANL     PCON2,#0DFH
+0035         ?C0004:
+                                           ; SOURCE LINE # 21
+0035 900005            MOV     DPTR,#05H
+0038 120000      E     LCALL   ?C?CLDOPTR
+003B B40104            CJNE    A,#01H,?C0005
+003E D2AD              SETB    EADC
+0040 8002              SJMP    ?C0006
+0042         ?C0005:
+                                           ; SOURCE LINE # 22
+0042 C2AD              CLR     EADC
+0044         ?C0006:
+                                           ; SOURCE LINE # 23
+0044 900004            MOV     DPTR,#04H
+0047 120000      E     LCALL   ?C?CLDOPTR
+004A B40103            CJNE    A,#01H,?C0007
+004D D2BD              SETB    PADC
+004F 22                RET     
+0050         ?C0007:
+                                           ; SOURCE LINE # 24
+0050 C2BD              CLR     PADC
+                                           ; SOURCE LINE # 25
+0052         ?C0009:
+0052 22                RET     
+             ; FUNCTION _ADC_Inilize (END)
+
+C51 COMPILER V9.53.0.0   ADC                                                               03/25/2015 15:09:05 PAGE 4   
+
+             ; FUNCTION _ADC_PowerControl (BEGIN)
+                                           ; SOURCE LINE # 35
+;---- Variable 'pwr' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 37
+0000 EF                MOV     A,R7
+0001 B40104            CJNE    A,#01H,?C0010
+0004 43BC80            ORL     ADC_CONTR,#080H
+0007 22                RET     
+0008         ?C0010:
+                                           ; SOURCE LINE # 38
+0008 53BC7F            ANL     ADC_CONTR,#07FH
+                                           ; SOURCE LINE # 39
+000B         ?C0012:
+000B 22                RET     
+             ; FUNCTION _ADC_PowerControl (END)
+
+             ; FUNCTION _Get_ADC10bitResult (BEGIN)
+                                           ; SOURCE LINE # 48
+;---- Variable 'adc' assigned to Register 'R4/R5' ----
+;---- Variable 'channel' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 49
+                                           ; SOURCE LINE # 53
+0000 EF                MOV     A,R7
+0001 D3                SETB    C
+0002 9407              SUBB    A,#07H
+0004 4002              JC      ?C0013
+0006 8051              SJMP    ?C0023
+0008         ?C0013:
+                                           ; SOURCE LINE # 54
+0008 E4                CLR     A
+0009 F5BD              MOV     ADC_RES,A
+                                           ; SOURCE LINE # 55
+000B F5BE              MOV     ADC_RESL,A
+                                           ; SOURCE LINE # 57
+000D E5BC              MOV     A,ADC_CONTR
+000F 54E0              ANL     A,#0E0H
+0011 4408              ORL     A,#08H
+0013 4F                ORL     A,R7
+0014 F5BC              MOV     ADC_CONTR,A
+                                           ; SOURCE LINE # 58
+0016 00                NOP     
+0017 00                NOP     
+0018 00                NOP     
+0019 00                NOP     
+                                           ; SOURCE LINE # 60
+;---- Variable 'i' assigned to Register 'R3' ----
+001A E4                CLR     A
+001B FB                MOV     R3,A
+001C         ?C0015:
+                                           ; SOURCE LINE # 61
+                                           ; SOURCE LINE # 62
+001C E5BC              MOV     A,ADC_CONTR
+001E 30E433            JNB     ACC.4,?C0017
+                                           ; SOURCE LINE # 63
+                                           ; SOURCE LINE # 64
+0021 53BCEF            ANL     ADC_CONTR,#0EFH
+                                           ; SOURCE LINE # 65
+0024 E597              MOV     A,PCON2
+0026 30E509            JNB     ACC.5,?C0019
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 67
+C51 COMPILER V9.53.0.0   ADC                                                               03/25/2015 15:09:05 PAGE 5   
+
+0029 E5BD              MOV     A,ADC_RES
+002B 5403              ANL     A,#03H
+                                           ; SOURCE LINE # 68
+002D ADBE              MOV     R5,ADC_RESL
+002F FC                MOV     R4,A
+                                           ; SOURCE LINE # 69
+0030 801D              SJMP    ?C0020
+0032         ?C0019:
+                                           ; SOURCE LINE # 71
+                                           ; SOURCE LINE # 72
+0032 AFBD              MOV     R7,ADC_RES
+0034 7C00              MOV     R4,#00H
+0036 AD07              MOV     R5,AR7
+                                           ; SOURCE LINE # 73
+0038 ED                MOV     A,R5
+0039 7E00              MOV     R6,#00H
+003B 7802              MOV     R0,#02H
+003D         ?C0022:
+003D C3                CLR     C
+003E 33                RLC     A
+003F CE                XCH     A,R6
+0040 33                RLC     A
+0041 CE                XCH     A,R6
+0042 D8F9              DJNZ    R0,?C0022
+0044 FF                MOV     R7,A
+0045 E5BE              MOV     A,ADC_RESL
+0047 5403              ANL     A,#03H
+0049 FD                MOV     R5,A
+004A EE                MOV     A,R6
+004B FC                MOV     R4,A
+004C EF                MOV     A,R7
+004D 4D                ORL     A,R5
+004E FD                MOV     R5,A
+                                           ; SOURCE LINE # 74
+004F         ?C0020:
+                                           ; SOURCE LINE # 75
+004F AF05              MOV     R7,AR5
+0051 AE04              MOV     R6,AR4
+0053 22                RET     
+                                           ; SOURCE LINE # 76
+                                           ; SOURCE LINE # 77
+0054         ?C0017:
+0054 0B                INC     R3
+0055 EB                MOV     A,R3
+0056 B4FAC3            CJNE    A,#0FAH,?C0015
+0059         ?C0016:
+                                           ; SOURCE LINE # 78
+0059         ?C0023:
+0059 7E04              MOV     R6,#04H
+005B 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 79
+005D         ?C0014:
+005D 22                RET     
+             ; FUNCTION _Get_ADC10bitResult (END)
+
+             ; FUNCTION ADC_int (BEGIN)
+                                           ; SOURCE LINE # 89
+                                           ; SOURCE LINE # 91
+0000 53BCEF            ANL     ADC_CONTR,#0EFH
+                                           ; SOURCE LINE # 92
+0003 32                RETI    
+             ; FUNCTION ADC_int (END)
+C51 COMPILER V9.53.0.0   ADC                                                               03/25/2015 15:09:05 PAGE 6   
+
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    193    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

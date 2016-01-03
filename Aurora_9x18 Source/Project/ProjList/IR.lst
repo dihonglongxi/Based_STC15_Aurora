@@ -1,0 +1,370 @@
+C51 COMPILER V9.53.0.0   IR                                                                03/25/2015 15:09:06 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE IR
+OBJECT MODULE PLACED IN ..\ProjOut\IR.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\IR.c LARGE OPTIMIZE(8,SPEED) CODE PRINT(..\Proj
+                    -List\IR.lst) OBJECT(..\ProjOut\IR.obj)
+
+line level    source
+
+   1          
+   2          /*********************************************************************************************************
+             -**************
+   3          * File Name    : Aurora_IR.c
+   4          * Version      : Keil Version: 9.52.0.0
+   5          * Device(s)    : HX1838
+   6          * Tool-Chain   : C51 V9.52
+   7          * Description  : 红外接收程序。适用于市场上用量最大的HT6121/6122及其兼容IC的编码。
+   8          * Creation Date: 2013/11/17
+   9          **********************************************************************************************************
+             -*************/
+  10          
+  11          #include "IR.h"
+  12          
+  13          /*************  本地变量声明    **************/
+  14          
+  15          bit             P_IR_RX_temp;           //最后状态
+  16          bit             B_IR_Sync;                      //已收到同步标志
+  17          uchar   IR_SampleCnt;           //采样计数
+  18          uchar   IR_BitCnt;                      //编码位数
+  19          uchar   IR_UserH;                         //用户码(地址)高字节
+  20          uchar   IR_UserL;                         //用户码(地址)低字节
+  21          uchar   IR_data;                          //数据原码
+  22          uchar   IR_DataShit;            //数据反码
+  23          
+  24          bit             B_IrUserErr;            //用户码错误标志位
+  25          bit             B_IR_Press;                     //按键标志位，包括重复按键
+  26          uchar   IR_code;                          //红外键码
+  27          
+  28          //*********************** IR Remote Module **************************
+  29          //this programme is used for Receive IR Remote (HT6121).
+  30          
+  31          //data format: Synchro,AddressH,AddressL,data,/data, (total 32 bit).
+  32          
+  33          //send a frame(85ms), pause 23ms, send synchro of another frame, pause 94ms
+  34          
+  35          //data rate: 108ms/Frame
+  36          
+  37          
+  38          //Synchro:low=9ms,high=4.5/2.25ms,low=0.5626ms
+  39          //Bit0:high=0.5626ms,low=0.5626ms
+  40          //Bit1:high=1.6879ms,low=0.5626ms
+  41          //frame space = 23 ms or 96 ms
+  42          
+  43          
+  44          //*******************************************************************************************
+  45          //**************************** IR RECEIVE MODULE ********************************************
+  46          
+  47          void IR_RX_HT6121(void)
+  48          {
+  49   1              uchar   SampleTime;
+  50   1      
+  51   1              IR_SampleCnt++;                                                 //Sample + 1
+  52   1      
+C51 COMPILER V9.53.0.0   IR                                                                03/25/2015 15:09:06 PAGE 2   
+
+  53   1              F0 = P_IR_RX_temp;                                              //Save Last sample status
+  54   1              P_IR_RX = 1;
+  55   1              P_IR_RX_temp = P_IR_RX;                                 //Read current status
+  56   1              if (F0 && !P_IR_RX_temp)                                        //Last sample is high，and current sample is low, so is fall edge
+  57   1              {
+  58   2                      SampleTime = IR_SampleCnt;                      //get the sample time
+  59   2                      IR_SampleCnt = 0;                                       //Clear the sample counter
+  60   2      
+  61   2                      if (SampleTime > D_IR_SYNC_MAX)         B_IR_Sync = 0;  //large the Maxim SYNC time, then error
+  62   2                      else if (SampleTime >= D_IR_SYNC_MIN)                                   //SYNC
+  63   2                      {
+  64   3                              if (SampleTime >= D_IR_SYNC_DIVIDE)
+  65   3                              {
+  66   4                                      B_IR_Sync = 1;                                  //has received SYNC
+  67   4                                      IR_BitCnt = D_IR_BIT_NUMBER;    //Load bit number
+  68   4                              }
+  69   3                      }
+  70   2                      else if (B_IR_Sync)                                             //has received SYNC
+  71   2                      {
+  72   3                              if (SampleTime > D_IR_DATA_MAX)         B_IR_Sync = 0;  //data samlpe time to large
+  73   3                              else
+  74   3                              {
+  75   4                                      IR_DataShit >>= 1;                                      //data shift right 1 bit
+  76   4                                      if (SampleTime >= D_IR_DATA_DIVIDE)     IR_DataShit |= 0x80;    //devide data 0 or 1
+  77   4                                      if (--IR_BitCnt == 0)                           //bit number is over?
+  78   4                                      {
+  79   5                                              B_IR_Sync = 0;                                  //Clear SYNC
+  80   5                                              if (~IR_DataShit == IR_data)            //判断数据正反码
+  81   5                                              {
+  82   6                                                      if ((IR_UserH == (User_code / 256)) &&
+  83   6                                                              IR_UserL == (User_code % 256))
+  84   6                                                              B_IrUserErr = 0;        //User code is righe
+  85   6                                                      else    B_IrUserErr = 1;        //user code is wrong
+  86   6      
+  87   6                                                      IR_code = IR_data;
+  88   6                                                      B_IR_Press = 1;                 //数据有效
+  89   6                                              }
+  90   5                                      }
+  91   4                                      else if ((IR_BitCnt & 7) == 0)          //one byte receive
+  92   4                                      {
+  93   5                                              IR_UserL = IR_UserH;                    //Save the User code high byte
+  94   5                                              IR_UserH = IR_data;                             //Save the User code low byte
+  95   5                                              IR_data = IR_DataShit;                  //Save the IR data byte
+  96   5                                      }
+  97   4                              }
+  98   3                      }
+  99   2              }
+ 100   1      }
+ 101          
+ 102          
+ 103          /**************** Timer1初始化函数 ******************************/
+ 104          void InitTimer1(void)
+ 105          {
+ 106   1              TMOD = 0;               //for STC15Fxxx系列     Timer1 as 16bit reload timer.
+ 107   1              TH1 = Timer1_Reload / 256;
+ 108   1              TL1 = Timer1_Reload % 256;
+ 109   1              ET1 = 1;
+ 110   1              TR1 = 1;
+ 111   1              IP = 0x08;
+ 112   1              EA = 1;
+ 113   1      }
+ 114          
+C51 COMPILER V9.53.0.0   IR                                                                03/25/2015 15:09:06 PAGE 3   
+
+ 115          /********************** Timer1中断函数************************/
+ 116          void timer1(void) interrupt 3
+ 117          {
+ 118   1              //      PWM_dr[0] = CL;
+ 119   1              //      PWM_dr[1] = CH;
+ 120   1              //      CL = 0;
+ 121   1              //      CH = 0; 
+ 122   1              //      PWM_OFF;
+ 123   1              IR_RX_HT6121();
+ 124   1              //      CH = PWM_dr[1];
+ 125   1              //      CL = PWM_dr[0];
+ 126   1              //      PWM_ON;
+ 127   1      }
+C51 COMPILER V9.53.0.0   IR                                                                03/25/2015 15:09:06 PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION IR_RX_HT6121 (BEGIN)
+                                           ; SOURCE LINE # 47
+                                           ; SOURCE LINE # 48
+                                           ; SOURCE LINE # 51
+0000 900000      R     MOV     DPTR,#IR_SampleCnt
+0003 E0                MOVX    A,@DPTR
+0004 04                INC     A
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 53
+0006 A200        R     MOV     C,P_IR_RX_temp
+0008 92D5              MOV     F0,C
+                                           ; SOURCE LINE # 54
+000A D2A0              SETB    P_IR_RX
+                                           ; SOURCE LINE # 55
+000C A2A0              MOV     C,P_IR_RX
+000E 9200        R     MOV     P_IR_RX_temp,C
+                                           ; SOURCE LINE # 56
+0010 20D503            JB      F0,$ + 6H
+0013 020000      R     LJMP    ?C0017
+0016 300003      R     JNB     P_IR_RX_temp,$ + 6H
+0019 020000      R     LJMP    ?C0017
+                                           ; SOURCE LINE # 57
+                                           ; SOURCE LINE # 58
+001C E0                MOVX    A,@DPTR
+001D FF                MOV     R7,A
+;---- Variable 'SampleTime' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 59
+001E E4                CLR     A
+001F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 61
+0020 EF                MOV     A,R7
+0021 D3                SETB    C
+0022 9478              SUBB    A,#078H
+0024 4003              JC      ?C0002
+0026 C200        R     CLR     B_IR_Sync
+0028 22                RET     
+0029         ?C0002:
+                                           ; SOURCE LINE # 62
+0029 EF                MOV     A,R7
+002A C3                CLR     C
+002B 944D              SUBB    A,#04DH
+002D 400E              JC      ?C0004
+                                           ; SOURCE LINE # 63
+                                           ; SOURCE LINE # 64
+002F EF                MOV     A,R7
+0030 9463              SUBB    A,#063H
+0032 406F              JC      ?C0017
+                                           ; SOURCE LINE # 65
+                                           ; SOURCE LINE # 66
+0034 D200        R     SETB    B_IR_Sync
+                                           ; SOURCE LINE # 67
+0036 900000      R     MOV     DPTR,#IR_BitCnt
+0039 7420              MOV     A,#020H
+003B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 68
+                                           ; SOURCE LINE # 69
+003C 22                RET     
+003D         ?C0004:
+                                           ; SOURCE LINE # 70
+C51 COMPILER V9.53.0.0   IR                                                                03/25/2015 15:09:06 PAGE 5   
+
+003D 300063      R     JNB     B_IR_Sync,?C0017
+                                           ; SOURCE LINE # 71
+                                           ; SOURCE LINE # 72
+0040 EF                MOV     A,R7
+0041 D3                SETB    C
+0042 9418              SUBB    A,#018H
+0044 4003              JC      ?C0008
+0046 C200        R     CLR     B_IR_Sync
+0048 22                RET     
+0049         ?C0008:
+                                           ; SOURCE LINE # 74
+                                           ; SOURCE LINE # 75
+0049 900000      R     MOV     DPTR,#IR_DataShit
+004C E0                MOVX    A,@DPTR
+004D C3                CLR     C
+004E 13                RRC     A
+004F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 76
+0050 EF                MOV     A,R7
+0051 C3                CLR     C
+0052 940D              SUBB    A,#0DH
+0054 4004              JC      ?C0010
+0056 E0                MOVX    A,@DPTR
+0057 4480              ORL     A,#080H
+0059 F0                MOVX    @DPTR,A
+005A         ?C0010:
+                                           ; SOURCE LINE # 77
+005A 900000      R     MOV     DPTR,#IR_BitCnt
+005D E0                MOVX    A,@DPTR
+005E 14                DEC     A
+005F F0                MOVX    @DPTR,A
+0060 7027              JNZ     ?C0011
+                                           ; SOURCE LINE # 78
+                                           ; SOURCE LINE # 79
+0062 C200        R     CLR     B_IR_Sync
+                                           ; SOURCE LINE # 80
+0064 900000      R     MOV     DPTR,#IR_DataShit
+0067 E0                MOVX    A,@DPTR
+0068 F4                CPL     A
+0069 FF                MOV     R7,A
+006A A3                INC     DPTR
+006B E0                MOVX    A,@DPTR
+006C FE                MOV     R6,A
+006D 6F                XRL     A,R7
+006E 7033              JNZ     ?C0017
+                                           ; SOURCE LINE # 81
+                                           ; SOURCE LINE # 82
+0070 900000      R     MOV     DPTR,#IR_UserH
+0073 E0                MOVX    A,@DPTR
+0074 B4BF08            CJNE    A,#0BFH,?C0013
+0077 A3                INC     DPTR
+0078 E0                MOVX    A,@DPTR
+0079 7004              JNZ     ?C0013
+                                           ; SOURCE LINE # 84
+007B C200        R     CLR     B_IrUserErr
+007D 8002              SJMP    ?C0014
+007F         ?C0013:
+                                           ; SOURCE LINE # 85
+007F D200        R     SETB    B_IrUserErr
+0081         ?C0014:
+                                           ; SOURCE LINE # 87
+0081 900000      R     MOV     DPTR,#IR_code
+C51 COMPILER V9.53.0.0   IR                                                                03/25/2015 15:09:06 PAGE 6   
+
+0084 EE                MOV     A,R6
+0085 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 88
+0086 D200        R     SETB    B_IR_Press
+                                           ; SOURCE LINE # 89
+                                           ; SOURCE LINE # 90
+0088 22                RET     
+0089         ?C0011:
+                                           ; SOURCE LINE # 91
+0089 900000      R     MOV     DPTR,#IR_BitCnt
+008C E0                MOVX    A,@DPTR
+008D 5407              ANL     A,#07H
+008F 7012              JNZ     ?C0017
+                                           ; SOURCE LINE # 92
+                                           ; SOURCE LINE # 93
+0091 A3                INC     DPTR
+0092 E0                MOVX    A,@DPTR
+0093 A3                INC     DPTR
+0094 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 94
+0095 900000      R     MOV     DPTR,#IR_data
+0098 E0                MOVX    A,@DPTR
+0099 900000      R     MOV     DPTR,#IR_UserH
+009C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 95
+009D 900000      R     MOV     DPTR,#IR_DataShit
+00A0 E0                MOVX    A,@DPTR
+00A1 A3                INC     DPTR
+00A2 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 96
+                                           ; SOURCE LINE # 97
+                                           ; SOURCE LINE # 98
+                                           ; SOURCE LINE # 99
+                                           ; SOURCE LINE # 100
+00A3         ?C0017:
+00A3 22                RET     
+             ; FUNCTION IR_RX_HT6121 (END)
+
+             ; FUNCTION InitTimer1 (BEGIN)
+                                           ; SOURCE LINE # 104
+                                           ; SOURCE LINE # 105
+                                           ; SOURCE LINE # 106
+0000 E4                CLR     A
+0001 F589              MOV     TMOD,A
+                                           ; SOURCE LINE # 107
+0003 758DFE            MOV     TH1,#0FEH
+                                           ; SOURCE LINE # 108
+0006 758BE7            MOV     TL1,#0E7H
+                                           ; SOURCE LINE # 109
+0009 D2AB              SETB    ET1
+                                           ; SOURCE LINE # 110
+000B D28E              SETB    TR1
+                                           ; SOURCE LINE # 111
+000D 75B808            MOV     IP,#08H
+                                           ; SOURCE LINE # 112
+0010 D2AF              SETB    EA
+                                           ; SOURCE LINE # 113
+0012 22                RET     
+             ; FUNCTION InitTimer1 (END)
+
+             ; FUNCTION timer1 (BEGIN)
+0000 C0E0              PUSH    ACC
+C51 COMPILER V9.53.0.0   IR                                                                03/25/2015 15:09:06 PAGE 7   
+
+0002 C083              PUSH    DPH
+0004 C082              PUSH    DPL
+0006 C0D0              PUSH    PSW
+0008 75D000            MOV     PSW,#00H
+000B C006              PUSH    AR6
+000D C007              PUSH    AR7
+                                           ; SOURCE LINE # 116
+                                           ; SOURCE LINE # 123
+000F 120000      R     LCALL   IR_RX_HT6121
+                                           ; SOURCE LINE # 127
+0012 D007              POP     AR7
+0014 D006              POP     AR6
+0016 D0D0              POP     PSW
+0018 D082              POP     DPL
+001A D083              POP     DPH
+001C D0E0              POP     ACC
+001E 32                RETI    
+             ; FUNCTION timer1 (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    214    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      7    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      4    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

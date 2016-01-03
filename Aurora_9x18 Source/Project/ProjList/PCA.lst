@@ -1,0 +1,842 @@
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE PCA
+OBJECT MODULE PLACED IN ..\ProjOut\PCA.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\PCA.c LARGE OPTIMIZE(8,SPEED) CODE PRINT(..\Pro
+                    -jList\PCA.lst) OBJECT(..\ProjOut\PCA.obj)
+
+line level    source
+
+   1          
+   2          #include        "PCA.h"
+   3          
+   4          bit             B_Capture0,B_Capture1,B_Capture2;
+   5          u8              PCA0_mode,PCA1_mode,PCA2_mode;
+   6          u16             CCAP0_tmp,PCA_Timer0;
+   7          u16             CCAP1_tmp,PCA_Timer1;
+   8          u16             CCAP2_tmp,PCA_Timer2;
+   9          
+  10          /*************  功能说明        **************
+  11          
+  12          
+  13          ******************************************/
+  14          
+  15          u16     PWM0_low;       //PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
+  16          u16     PWM1_low;       //PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
+  17          u16     PWM2_low;       //PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
+  18          
+  19          
+  20          //========================================================================
+  21          // 函数: void PWMn_SetHighReg(unsigned int high)
+  22          // 描述: 更新占空比数据。
+  23          // 参数: high:  占空比数据，即PWM输出高电平的PCA时钟脉冲个数。
+  24          // 返回: 无
+  25          // 版本: VER1.0
+  26          // 日期: 2013-5-15
+  27          // 备注: 
+  28          //========================================================================
+  29          void PWMn_Update(u8 PCA_id, u16 high)
+  30          {
+  31   1              if(PCA_id == PCA0)
+  32   1              {
+  33   2                      if(high > PWM0_HIGH_MAX)        high = PWM0_HIGH_MAX;   //如果写入大于最大占空比数据，强制为最大占空比。
+  34   2                      if(high < PWM0_HIGH_MIN)        high = PWM0_HIGH_MIN;   //如果写入小于最小占空比数据，则返回错误代码2。
+  35   2                      CR = 0;                                                 //停止PCA。
+  36   2                      PCA_Timer0 = high;                              //数据在正确范围，则装入占空比寄存器。
+  37   2                      PWM0_low = PWM0_DUTY - high;    //计算并保存PWM输出低电平的PCA时钟脉冲个数。
+  38   2                      CR = 1;                                                 //启动PCA。
+  39   2              }
+  40   1              else if(PCA_id == PCA1)
+  41   1              {
+  42   2                      if(high > PWM1_HIGH_MAX)        high = PWM1_HIGH_MAX;   //如果写入大于最大占空比数据，强制为最大占空比。
+  43   2                      if(high < PWM1_HIGH_MIN)        high = PWM1_HIGH_MIN;   //如果写入小于最小占空比数据，则返回错误代码2。
+  44   2                      CR = 0;                                                 //停止PCA。
+  45   2                      PCA_Timer1 = high;                              //数据在正确范围，则装入占空比寄存器。
+  46   2                      PWM1_low = PWM1_DUTY - high;    //计算并保存PWM输出低电平的PCA时钟脉冲个数。
+  47   2                      CR = 1;                                                 //启动PCA。
+  48   2              }
+  49   1              else if(PCA_id == PCA2)
+  50   1              {
+  51   2                      if(high > PWM2_HIGH_MAX)                high = PWM2_HIGH_MAX;   //如果写入大于最大占空比数据，强制为最大占空比。
+  52   2                      if(high < PWM2_HIGH_MIN)                high = PWM2_HIGH_MIN;   //如果写入小于最小占空比数据，则返回错误代码2。
+  53   2                      CR = 0;                                         //停止PCA。
+  54   2                      PCA_Timer2 = high;                                              //数据在正确范围，则装入占空比寄存器。
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 2   
+
+  55   2                      PWM2_low = PWM2_DUTY - high;                            //计算并保存PWM输出低电平的PCA时钟脉冲个数。
+  56   2                      CR = 1;                                         //启动PCA。
+  57   2              }
+  58   1      }
+  59          
+  60          
+  61          
+  62          //========================================================================
+  63          // 函数: UpdatePwm(u8 PCA_id, u8 pwm_value)
+  64          // 描述: 更新PWM值. 
+  65          // 参数: PCA_id: PCA序号. 取值 PCA0,PCA1,PCA2,PCA_Counter
+  66          //               pwm_value: pwm值, 这个值是输出低电平的时间.
+  67          // 返回: none.
+  68          // 版本: V1.0, 2012-11-22
+  69          //========================================================================
+  70          /*
+  71          void    UpdatePwm(u8 PCA_id, u8 pwm_value)
+  72          {
+  73                  if(PCA_id == PCA0)              CCAP0H = pwm_value;
+  74                  else if(PCA_id == PCA1) CCAP1H = pwm_value;
+  75                  else if(PCA_id == PCA2) CCAP2H = pwm_value;
+  76          }
+  77          */
+  78          
+  79          //========================================================================
+  80          // 函数: void   PCA_Init(PCA_id, PCA_InitTypeDef *PCAx)
+  81          // 描述: PCA初始化程序.
+  82          // 参数: PCA_id: PCA序号. 取值 PCA0,PCA1,PCA2,PCA_Counter
+  83          //               PCAx: 结构参数,请参考PCA.h里的定义.
+  84          // 返回: none.
+  85          // 版本: V1.0, 2012-11-22
+  86          //========================================================================
+  87          void    PCA_Init(u8 PCA_id, PCA_InitTypeDef *PCAx)
+  88          {
+  89   1              if(PCA_id > PCA_Counter)        return;         //id错误
+  90   1      
+  91   1              if(PCA_id == PCA_Counter)                       //设置公用Counter
+  92   1              {
+  93   2                      CR = 0;
+  94   2                      CH = 0;
+  95   2                      CL = 0;
+  96   2                      AUXR1 = (AUXR1 & ~(3<<4)) | PCAx->PCA_IoUse;                    //切换IO口
+  97   2                      CMOD  = (CMOD  & ~(7<<1)) | PCAx->PCA_Clock;                    //选择时钟源
+  98   2                      CMOD  = (CMOD  & ~1) | (PCAx->PCA_Interrupt_Mode & 1);  //ECF
+  99   2                      if(PCAx->PCA_Polity == PolityHigh)              PPCA = 1;       //高优先级中断
+ 100   2                      else                                                                    PPCA = 0;       //低优先级中断
+ 101   2                      CR = 1;
+ 102   2                      return;
+ 103   2              }
+ 104   1      
+ 105   1              PCAx->PCA_Interrupt_Mode &= (3<<4) + 1;
+ 106   1              if(PCAx->PCA_Mode >= PCA_Mode_SoftTimer)        PCAx->PCA_Interrupt_Mode &= ~(3<<4);
+ 107   1      
+ 108   1              if(PCA_id == PCA0)
+ 109   1              {
+ 110   2                      CCAPM0    = PCAx->PCA_Mode | PCAx->PCA_Interrupt_Mode;  //工作模式, 中断模式
+ 111   2                      PCA_PWM0  = (PCA_PWM0 & ~(3<<6)) | PCAx->PCA_PWM_Wide;  //PWM宽度
+ 112   2      
+ 113   2                      PCA_Timer0 = PCAx->PCA_Value;
+ 114   2                      B_Capture0 = 0;
+ 115   2                      PCA0_mode = PCAx->PCA_Mode;
+ 116   2                      CCAP0_tmp = PCA_Timer0;
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 3   
+
+ 117   2                      CCAP0L = (u8)CCAP0_tmp;                 //将影射寄存器写入捕获寄存器，先写CCAP0L
+ 118   2                      CCAP0H = (u8)(CCAP0_tmp >> 8);  //后写CCAP0H
+ 119   2              }
+ 120   1              if(PCA_id == PCA1)
+ 121   1              {
+ 122   2                      CCAPM1    = PCAx->PCA_Mode | PCAx->PCA_Interrupt_Mode;
+ 123   2                      PCA_PWM1  = (PCA_PWM1 & ~(3<<6)) | PCAx->PCA_PWM_Wide;
+ 124   2      
+ 125   2                      PCA_Timer1 = PCAx->PCA_Value;
+ 126   2                      B_Capture1 = 0;
+ 127   2                      PCA1_mode = PCAx->PCA_Mode;
+ 128   2                      CCAP1_tmp = PCA_Timer1;
+ 129   2                      CCAP1L = (u8)CCAP1_tmp;                 //将影射寄存器写入捕获寄存器，先写CCAP0L
+ 130   2                      CCAP1H = (u8)(CCAP1_tmp >> 8);  //后写CCAP0H
+ 131   2              }
+ 132   1              if(PCA_id == PCA2)
+ 133   1              {
+ 134   2                      CCAPM2    = PCAx->PCA_Mode | PCAx->PCA_Interrupt_Mode;
+ 135   2                      PCA_PWM2  = (PCA_PWM2 & ~(3<<6)) | PCAx->PCA_PWM_Wide;
+ 136   2      
+ 137   2                      PCA_Timer2 = PCAx->PCA_Value;
+ 138   2                      B_Capture2 = 0;
+ 139   2                      PCA2_mode = PCAx->PCA_Mode;
+ 140   2                      CCAP2_tmp = PCA_Timer2;
+ 141   2                      CCAP2L = (u8)CCAP2_tmp;                 //将影射寄存器写入捕获寄存器，先写CCAP0L
+ 142   2                      CCAP2H = (u8)(CCAP2_tmp >> 8);  //后写CCAP0H
+ 143   2              }
+ 144   1      }
+ 145          
+ 146          
+ 147          //========================================================================
+ 148          // 函数: void   PCA_Handler (void) interrupt PCA_VECTOR
+ 149          // 描述: PCA中断处理程序.
+ 150          // 参数: None
+ 151          // 返回: none.
+ 152          // 版本: V1.0, 2012-11-22
+ 153          //========================================================================
+ 154          void    PCA_Handler (void) interrupt PCA_VECTOR
+ 155          {
+ 156   1              if(CCF0)                //PCA模块0中断
+ 157   1              {
+ 158   2                      CCF0 = 0;               //清PCA模块0中断标志
+ 159   2                      if(P25) CCAP0_tmp += PCA_Timer0;        //输出为高电平，则给影射寄存器装载高电平时间长度
+ 160   2                      else    CCAP0_tmp += PWM0_low;  //输出为低电平，则给影射寄存器装载低电平时间长度
+ 161   2                      CCAP0L = (u8)CCAP0_tmp;                 //将影射寄存器写入捕获寄存器，先写CCAP0L
+ 162   2                      CCAP0H = (u8)(CCAP0_tmp >> 8);  //后写CCAP0H
+ 163   2              }
+ 164   1      
+ 165   1              if(CCF1)        //PCA模块1中断
+ 166   1              {
+ 167   2                      CCF1 = 0;               //清PCA模块1中断标志
+ 168   2                      if(P26) CCAP1_tmp += PCA_Timer1;        //输出为高电平，则给影射寄存器装载高电平时间长度
+ 169   2                      else    CCAP1_tmp += PWM1_low;  //输出为低电平，则给影射寄存器装载低电平时间长度
+ 170   2                      CCAP1L = (u8)CCAP1_tmp;                 //将影射寄存器写入捕获寄存器，先写CCAP0L
+ 171   2                      CCAP1H = (u8)(CCAP1_tmp >> 8);  //后写CCAP0H
+ 172   2              }
+ 173   1      
+ 174   1              if(CCF2)        //PCA模块2中断
+ 175   1              {
+ 176   2                      CCF2 = 0;               //清PCA模块1中断标志
+ 177   2                      if(P27) CCAP2_tmp += PCA_Timer2;        //输出为高电平，则给影射寄存器装载高电平时间长度
+ 178   2                      else    CCAP2_tmp += PWM2_low;  //输出为低电平，则给影射寄存器装载低电平时间长度
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 4   
+
+ 179   2                      CCAP2L = (u8)CCAP2_tmp;                 //将影射寄存器写入捕获寄存器，先写CCAP0L
+ 180   2                      CCAP2H = (u8)(CCAP2_tmp >> 8);  //后写CCAP0H
+ 181   2              }
+ 182   1      
+ 183   1      /*      if(CF)  //PCA溢出中断
+ 184   1              {
+ 185   1                      CF = 0;                 //清PCA溢出中断标志
+ 186   1              }
+ 187   1      */
+ 188   1      }
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 5   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _PWMn_Update (BEGIN)
+                                           ; SOURCE LINE # 29
+;---- Variable 'high' assigned to Register 'R4/R5' ----
+;---- Variable 'PCA_id' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 30
+                                           ; SOURCE LINE # 31
+0000 EF                MOV     A,R7
+0001 7034              JNZ     ?C0001
+                                           ; SOURCE LINE # 32
+                                           ; SOURCE LINE # 33
+0003 D3                SETB    C
+0004 ED                MOV     A,R5
+0005 9450              SUBB    A,#050H
+0007 EC                MOV     A,R4
+0008 940F              SUBB    A,#0FH
+000A 4004              JC      ?C0002
+000C 7C0F              MOV     R4,#0FH
+000E 7D50              MOV     R5,#050H
+0010         ?C0002:
+                                           ; SOURCE LINE # 34
+0010 C3                CLR     C
+0011 ED                MOV     A,R5
+0012 9450              SUBB    A,#050H
+0014 EC                MOV     A,R4
+0015 9400              SUBB    A,#00H
+0017 5004              JNC     ?C0003
+0019 7C00              MOV     R4,#00H
+001B 7D50              MOV     R5,#050H
+001D         ?C0003:
+                                           ; SOURCE LINE # 35
+001D C2DE              CLR     CR
+                                           ; SOURCE LINE # 36
+001F 900000      R     MOV     DPTR,#PCA_Timer0
+0022 EC                MOV     A,R4
+0023 F0                MOVX    @DPTR,A
+0024 A3                INC     DPTR
+0025 ED                MOV     A,R5
+0026 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 37
+0027 C3                CLR     C
+0028 74A0              MOV     A,#0A0H
+002A 9D                SUBB    A,R5
+002B 900000      R     MOV     DPTR,#PWM0_low+01H
+002E F0                MOVX    @DPTR,A
+002F 740F              MOV     A,#0FH
+0031 9C                SUBB    A,R4
+0032 900000      R     MOV     DPTR,#PWM0_low
+                                           ; SOURCE LINE # 38
+                                           ; SOURCE LINE # 39
+0035 8073              SJMP    ?C0033
+0037         ?C0001:
+                                           ; SOURCE LINE # 40
+0037 EF                MOV     A,R7
+0038 6401              XRL     A,#01H
+003A 7034              JNZ     ?C0005
+                                           ; SOURCE LINE # 41
+                                           ; SOURCE LINE # 42
+003C D3                SETB    C
+003D ED                MOV     A,R5
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 6   
+
+003E 9468              SUBB    A,#068H
+0040 EC                MOV     A,R4
+0041 940B              SUBB    A,#0BH
+0043 4004              JC      ?C0006
+0045 7C0B              MOV     R4,#0BH
+0047 7D68              MOV     R5,#068H
+0049         ?C0006:
+                                           ; SOURCE LINE # 43
+0049 C3                CLR     C
+004A ED                MOV     A,R5
+004B 9450              SUBB    A,#050H
+004D EC                MOV     A,R4
+004E 9400              SUBB    A,#00H
+0050 5004              JNC     ?C0007
+0052 7C00              MOV     R4,#00H
+0054 7D50              MOV     R5,#050H
+0056         ?C0007:
+                                           ; SOURCE LINE # 44
+0056 C2DE              CLR     CR
+                                           ; SOURCE LINE # 45
+0058 900000      R     MOV     DPTR,#PCA_Timer1
+005B EC                MOV     A,R4
+005C F0                MOVX    @DPTR,A
+005D A3                INC     DPTR
+005E ED                MOV     A,R5
+005F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 46
+0060 C3                CLR     C
+0061 74B8              MOV     A,#0B8H
+0063 9D                SUBB    A,R5
+0064 900000      R     MOV     DPTR,#PWM1_low+01H
+0067 F0                MOVX    @DPTR,A
+0068 740B              MOV     A,#0BH
+006A 9C                SUBB    A,R4
+006B 900000      R     MOV     DPTR,#PWM1_low
+006E         ?C0032:
+                                           ; SOURCE LINE # 47
+                                           ; SOURCE LINE # 48
+006E 803A              SJMP    ?C0033
+0070         ?C0005:
+                                           ; SOURCE LINE # 49
+0070 EF                MOV     A,R7
+0071 6402              XRL     A,#02H
+0073 7038              JNZ     ?C0012
+                                           ; SOURCE LINE # 50
+                                           ; SOURCE LINE # 51
+0075 D3                SETB    C
+0076 ED                MOV     A,R5
+0077 9480              SUBB    A,#080H
+0079 EC                MOV     A,R4
+007A 9407              SUBB    A,#07H
+007C 4004              JC      ?C0010
+007E 7C07              MOV     R4,#07H
+0080 7D80              MOV     R5,#080H
+0082         ?C0010:
+                                           ; SOURCE LINE # 52
+0082 C3                CLR     C
+0083 ED                MOV     A,R5
+0084 9450              SUBB    A,#050H
+0086 EC                MOV     A,R4
+0087 9400              SUBB    A,#00H
+0089 5004              JNC     ?C0011
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 7   
+
+008B 7C00              MOV     R4,#00H
+008D 7D50              MOV     R5,#050H
+008F         ?C0011:
+                                           ; SOURCE LINE # 53
+008F C2DE              CLR     CR
+                                           ; SOURCE LINE # 54
+0091 900000      R     MOV     DPTR,#PCA_Timer2
+0094 EC                MOV     A,R4
+0095 F0                MOVX    @DPTR,A
+0096 A3                INC     DPTR
+0097 ED                MOV     A,R5
+0098 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 55
+0099 AE04              MOV     R6,AR4
+009B FF                MOV     R7,A
+009C C3                CLR     C
+009D 74D0              MOV     A,#0D0H
+009F 9F                SUBB    A,R7
+00A0 900000      R     MOV     DPTR,#PWM2_low+01H
+00A3 F0                MOVX    @DPTR,A
+00A4 7407              MOV     A,#07H
+00A6 9E                SUBB    A,R6
+00A7 900000      R     MOV     DPTR,#PWM2_low
+00AA         ?C0033:
+00AA F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 56
+00AB D2DE              SETB    CR
+                                           ; SOURCE LINE # 57
+                                           ; SOURCE LINE # 58
+00AD         ?C0012:
+00AD 22                RET     
+             ; FUNCTION _PWMn_Update (END)
+
+             ; FUNCTION _PCA_Init (BEGIN)
+                                           ; SOURCE LINE # 87
+0000 900000      R     MOV     DPTR,#PCAx
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+;---- Variable 'PCA_id' assigned to Register 'R5' ----
+000B AD07              MOV     R5,AR7
+                                           ; SOURCE LINE # 88
+                                           ; SOURCE LINE # 89
+000D ED                MOV     A,R5
+000E D3                SETB    C
+000F 9403              SUBB    A,#03H
+0011 4003              JC      $ + 5H
+0013 020000      R     LJMP    ?C0014
+0016         ?C0013:
+                                           ; SOURCE LINE # 91
+0016 ED                MOV     A,R5
+0017 6403              XRL     A,#03H
+0019 704C              JNZ     ?C0015
+                                           ; SOURCE LINE # 92
+                                           ; SOURCE LINE # 93
+001B C2DE              CLR     CR
+                                           ; SOURCE LINE # 94
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 8   
+
+001D F5F9              MOV     CH,A
+                                           ; SOURCE LINE # 95
+001F F5E9              MOV     CL,A
+                                           ; SOURCE LINE # 96
+0021 900000      R     MOV     DPTR,#PCAx
+0024 E0                MOVX    A,@DPTR
+0025 FB                MOV     R3,A
+0026 A3                INC     DPTR
+0027 E0                MOVX    A,@DPTR
+0028 FA                MOV     R2,A
+0029 A3                INC     DPTR
+002A E0                MOVX    A,@DPTR
+002B F9                MOV     R1,A
+002C 120000      E     LCALL   ?C?CLDPTR
+002F FF                MOV     R7,A
+0030 E5A2              MOV     A,AUXR1
+0032 54CF              ANL     A,#0CFH
+0034 4F                ORL     A,R7
+0035 F5A2              MOV     AUXR1,A
+                                           ; SOURCE LINE # 97
+0037 900001            MOV     DPTR,#01H
+003A 120000      E     LCALL   ?C?CLDOPTR
+003D FF                MOV     R7,A
+003E E5D9              MOV     A,CMOD
+0040 54F1              ANL     A,#0F1H
+0042 4F                ORL     A,R7
+0043 F5D9              MOV     CMOD,A
+                                           ; SOURCE LINE # 98
+0045 900004            MOV     DPTR,#04H
+0048 120000      E     LCALL   ?C?CLDOPTR
+004B 5401              ANL     A,#01H
+004D FF                MOV     R7,A
+004E E5D9              MOV     A,CMOD
+0050 54FE              ANL     A,#0FEH
+0052 4F                ORL     A,R7
+0053 F5D9              MOV     CMOD,A
+                                           ; SOURCE LINE # 99
+0055 900005            MOV     DPTR,#05H
+0058 120000      E     LCALL   ?C?CLDOPTR
+005B B40104            CJNE    A,#01H,?C0016
+005E D2BF              SETB    PPCA
+0060 8002              SJMP    ?C0017
+0062         ?C0016:
+                                           ; SOURCE LINE # 100
+0062 C2BF              CLR     PPCA
+0064         ?C0017:
+                                           ; SOURCE LINE # 101
+0064 D2DE              SETB    CR
+0066 22                RET     
+                                           ; SOURCE LINE # 103
+0067         ?C0015:
+                                           ; SOURCE LINE # 105
+0067 900000      R     MOV     DPTR,#PCAx
+006A E0                MOVX    A,@DPTR
+006B FB                MOV     R3,A
+006C A3                INC     DPTR
+006D E0                MOVX    A,@DPTR
+006E FA                MOV     R2,A
+006F A3                INC     DPTR
+0070 E0                MOVX    A,@DPTR
+0071 2404              ADD     A,#04H
+0073 F9                MOV     R1,A
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 9   
+
+0074 E4                CLR     A
+0075 3A                ADDC    A,R2
+0076 FA                MOV     R2,A
+0077 120000      E     LCALL   ?C?CLDPTR
+007A 5431              ANL     A,#031H
+007C 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 106
+007F 900000      R     MOV     DPTR,#PCAx
+0082 E0                MOVX    A,@DPTR
+0083 FB                MOV     R3,A
+0084 A3                INC     DPTR
+0085 E0                MOVX    A,@DPTR
+0086 FA                MOV     R2,A
+0087 A3                INC     DPTR
+0088 E0                MOVX    A,@DPTR
+0089 F9                MOV     R1,A
+008A 900002            MOV     DPTR,#02H
+008D 120000      E     LCALL   ?C?CLDOPTR
+0090 C3                CLR     C
+0091 9448              SUBB    A,#048H
+0093 400F              JC      ?C0018
+0095 E9                MOV     A,R1
+0096 2404              ADD     A,#04H
+0098 F9                MOV     R1,A
+0099 E4                CLR     A
+009A 3A                ADDC    A,R2
+009B FA                MOV     R2,A
+009C 120000      E     LCALL   ?C?CLDPTR
+009F 54CF              ANL     A,#0CFH
+00A1 120000      E     LCALL   ?C?CSTPTR
+00A4         ?C0018:
+                                           ; SOURCE LINE # 108
+00A4 ED                MOV     A,R5
+00A5 704F              JNZ     ?C0019
+                                           ; SOURCE LINE # 109
+                                           ; SOURCE LINE # 110
+00A7 900000      R     MOV     DPTR,#PCAx
+00AA E0                MOVX    A,@DPTR
+00AB FB                MOV     R3,A
+00AC A3                INC     DPTR
+00AD E0                MOVX    A,@DPTR
+00AE FA                MOV     R2,A
+00AF A3                INC     DPTR
+00B0 E0                MOVX    A,@DPTR
+00B1 F9                MOV     R1,A
+00B2 900004            MOV     DPTR,#04H
+00B5 120000      E     LCALL   ?C?CLDOPTR
+00B8 FF                MOV     R7,A
+00B9 900002            MOV     DPTR,#02H
+00BC 120000      E     LCALL   ?C?CLDOPTR
+00BF FE                MOV     R6,A
+00C0 4F                ORL     A,R7
+00C1 F5DA              MOV     CCAPM0,A
+                                           ; SOURCE LINE # 111
+00C3 900003            MOV     DPTR,#03H
+00C6 120000      E     LCALL   ?C?CLDOPTR
+00C9 FF                MOV     R7,A
+00CA E5F2              MOV     A,PCA_PWM0
+00CC 543F              ANL     A,#03FH
+00CE 4F                ORL     A,R7
+00CF F5F2              MOV     PCA_PWM0,A
+                                           ; SOURCE LINE # 113
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 10  
+
+00D1 900006            MOV     DPTR,#06H
+00D4 120000      E     LCALL   ?C?ILDOPTR
+00D7 FB                MOV     R3,A
+00D8 AAF0              MOV     R2,B
+00DA 900000      R     MOV     DPTR,#PCA_Timer0
+00DD EA                MOV     A,R2
+00DE F0                MOVX    @DPTR,A
+00DF A3                INC     DPTR
+00E0 EB                MOV     A,R3
+00E1 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 114
+00E2 C200        R     CLR     B_Capture0
+                                           ; SOURCE LINE # 115
+00E4 900000      R     MOV     DPTR,#PCA0_mode
+00E7 EE                MOV     A,R6
+00E8 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 116
+00E9 900000      R     MOV     DPTR,#CCAP0_tmp
+00EC EA                MOV     A,R2
+00ED F0                MOVX    @DPTR,A
+00EE A3                INC     DPTR
+00EF EB                MOV     A,R3
+00F0 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 117
+00F1 F5EA              MOV     CCAP0L,A
+                                           ; SOURCE LINE # 118
+00F3 EA                MOV     A,R2
+00F4 F5FA              MOV     CCAP0H,A
+                                           ; SOURCE LINE # 119
+00F6         ?C0019:
+                                           ; SOURCE LINE # 120
+00F6 ED                MOV     A,R5
+00F7 6401              XRL     A,#01H
+00F9 704F              JNZ     ?C0020
+                                           ; SOURCE LINE # 121
+                                           ; SOURCE LINE # 122
+00FB 900000      R     MOV     DPTR,#PCAx
+00FE E0                MOVX    A,@DPTR
+00FF FB                MOV     R3,A
+0100 A3                INC     DPTR
+0101 E0                MOVX    A,@DPTR
+0102 FA                MOV     R2,A
+0103 A3                INC     DPTR
+0104 E0                MOVX    A,@DPTR
+0105 F9                MOV     R1,A
+0106 900004            MOV     DPTR,#04H
+0109 120000      E     LCALL   ?C?CLDOPTR
+010C FF                MOV     R7,A
+010D 900002            MOV     DPTR,#02H
+0110 120000      E     LCALL   ?C?CLDOPTR
+0113 FE                MOV     R6,A
+0114 4F                ORL     A,R7
+0115 F5DB              MOV     CCAPM1,A
+                                           ; SOURCE LINE # 123
+0117 900003            MOV     DPTR,#03H
+011A 120000      E     LCALL   ?C?CLDOPTR
+011D FF                MOV     R7,A
+011E E5F3              MOV     A,PCA_PWM1
+0120 543F              ANL     A,#03FH
+0122 4F                ORL     A,R7
+0123 F5F3              MOV     PCA_PWM1,A
+                                           ; SOURCE LINE # 125
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 11  
+
+0125 900006            MOV     DPTR,#06H
+0128 120000      E     LCALL   ?C?ILDOPTR
+012B FB                MOV     R3,A
+012C AAF0              MOV     R2,B
+012E 900000      R     MOV     DPTR,#PCA_Timer1
+0131 EA                MOV     A,R2
+0132 F0                MOVX    @DPTR,A
+0133 A3                INC     DPTR
+0134 EB                MOV     A,R3
+0135 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 126
+0136 C200        R     CLR     B_Capture1
+                                           ; SOURCE LINE # 127
+0138 900000      R     MOV     DPTR,#PCA1_mode
+013B EE                MOV     A,R6
+013C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 128
+013D 900000      R     MOV     DPTR,#CCAP1_tmp
+0140 EA                MOV     A,R2
+0141 F0                MOVX    @DPTR,A
+0142 A3                INC     DPTR
+0143 EB                MOV     A,R3
+0144 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 129
+0145 F5EB              MOV     CCAP1L,A
+                                           ; SOURCE LINE # 130
+0147 EA                MOV     A,R2
+0148 F5FB              MOV     CCAP1H,A
+                                           ; SOURCE LINE # 131
+014A         ?C0020:
+                                           ; SOURCE LINE # 132
+014A ED                MOV     A,R5
+014B 6402              XRL     A,#02H
+014D 704F              JNZ     ?C0014
+                                           ; SOURCE LINE # 133
+                                           ; SOURCE LINE # 134
+014F 900000      R     MOV     DPTR,#PCAx
+0152 E0                MOVX    A,@DPTR
+0153 FB                MOV     R3,A
+0154 A3                INC     DPTR
+0155 E0                MOVX    A,@DPTR
+0156 FA                MOV     R2,A
+0157 A3                INC     DPTR
+0158 E0                MOVX    A,@DPTR
+0159 F9                MOV     R1,A
+015A 900004            MOV     DPTR,#04H
+015D 120000      E     LCALL   ?C?CLDOPTR
+0160 FF                MOV     R7,A
+0161 900002            MOV     DPTR,#02H
+0164 120000      E     LCALL   ?C?CLDOPTR
+0167 FE                MOV     R6,A
+0168 4F                ORL     A,R7
+0169 F5DC              MOV     CCAPM2,A
+                                           ; SOURCE LINE # 135
+016B 900003            MOV     DPTR,#03H
+016E 120000      E     LCALL   ?C?CLDOPTR
+0171 FF                MOV     R7,A
+0172 E5F4              MOV     A,PCA_PWM2
+0174 543F              ANL     A,#03FH
+0176 4F                ORL     A,R7
+0177 F5F4              MOV     PCA_PWM2,A
+                                           ; SOURCE LINE # 137
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 12  
+
+0179 900006            MOV     DPTR,#06H
+017C 120000      E     LCALL   ?C?ILDOPTR
+017F FD                MOV     R5,A
+0180 ACF0              MOV     R4,B
+0182 900000      R     MOV     DPTR,#PCA_Timer2
+0185 EC                MOV     A,R4
+0186 F0                MOVX    @DPTR,A
+0187 A3                INC     DPTR
+0188 ED                MOV     A,R5
+0189 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 138
+018A C200        R     CLR     B_Capture2
+                                           ; SOURCE LINE # 139
+018C 900000      R     MOV     DPTR,#PCA2_mode
+018F EE                MOV     A,R6
+0190 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 140
+0191 900000      R     MOV     DPTR,#CCAP2_tmp
+0194 EC                MOV     A,R4
+0195 F0                MOVX    @DPTR,A
+0196 A3                INC     DPTR
+0197 ED                MOV     A,R5
+0198 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 141
+0199 F5EC              MOV     CCAP2L,A
+                                           ; SOURCE LINE # 142
+019B EC                MOV     A,R4
+019C F5FC              MOV     CCAP2H,A
+                                           ; SOURCE LINE # 143
+                                           ; SOURCE LINE # 144
+019E         ?C0014:
+019E 22                RET     
+             ; FUNCTION _PCA_Init (END)
+
+             ; FUNCTION PCA_Handler (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C083              PUSH    DPH
+0004 C082              PUSH    DPL
+0006 C0D0              PUSH    PSW
+0008 75D000            MOV     PSW,#00H
+000B C006              PUSH    AR6
+000D C007              PUSH    AR7
+                                           ; SOURCE LINE # 154
+                                           ; SOURCE LINE # 156
+000F 30D82A            JNB     CCF0,?C0022
+                                           ; SOURCE LINE # 157
+                                           ; SOURCE LINE # 158
+0012 C2D8              CLR     CCF0
+                                           ; SOURCE LINE # 159
+0014 30A505            JNB     P25,?C0023
+0017 900000      R     MOV     DPTR,#PCA_Timer0
+001A 8003              SJMP    ?C0034
+001C         ?C0023:
+                                           ; SOURCE LINE # 160
+001C 900000      R     MOV     DPTR,#PWM0_low
+001F         ?C0034:
+001F E0                MOVX    A,@DPTR
+0020 FE                MOV     R6,A
+0021 A3                INC     DPTR
+0022 E0                MOVX    A,@DPTR
+0023 FF                MOV     R7,A
+0024 900000      R     MOV     DPTR,#CCAP0_tmp+01H
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 13  
+
+0027 E0                MOVX    A,@DPTR
+0028 2F                ADD     A,R7
+0029 F0                MOVX    @DPTR,A
+002A 900000      R     MOV     DPTR,#CCAP0_tmp
+002D E0                MOVX    A,@DPTR
+002E 3E                ADDC    A,R6
+002F F0                MOVX    @DPTR,A
+0030         ?C0024:
+                                           ; SOURCE LINE # 161
+0030 900000      R     MOV     DPTR,#CCAP0_tmp
+0033 E0                MOVX    A,@DPTR
+0034 FE                MOV     R6,A
+0035 A3                INC     DPTR
+0036 E0                MOVX    A,@DPTR
+0037 F5EA              MOV     CCAP0L,A
+                                           ; SOURCE LINE # 162
+0039 EE                MOV     A,R6
+003A F5FA              MOV     CCAP0H,A
+                                           ; SOURCE LINE # 163
+003C         ?C0022:
+                                           ; SOURCE LINE # 165
+003C 30D92A            JNB     CCF1,?C0025
+                                           ; SOURCE LINE # 166
+                                           ; SOURCE LINE # 167
+003F C2D9              CLR     CCF1
+                                           ; SOURCE LINE # 168
+0041 30A605            JNB     P26,?C0026
+0044 900000      R     MOV     DPTR,#PCA_Timer1
+0047 8003              SJMP    ?C0035
+0049         ?C0026:
+                                           ; SOURCE LINE # 169
+0049 900000      R     MOV     DPTR,#PWM1_low
+004C         ?C0035:
+004C E0                MOVX    A,@DPTR
+004D FE                MOV     R6,A
+004E A3                INC     DPTR
+004F E0                MOVX    A,@DPTR
+0050 FF                MOV     R7,A
+0051 900000      R     MOV     DPTR,#CCAP1_tmp+01H
+0054 E0                MOVX    A,@DPTR
+0055 2F                ADD     A,R7
+0056 F0                MOVX    @DPTR,A
+0057 900000      R     MOV     DPTR,#CCAP1_tmp
+005A E0                MOVX    A,@DPTR
+005B 3E                ADDC    A,R6
+005C F0                MOVX    @DPTR,A
+005D         ?C0027:
+                                           ; SOURCE LINE # 170
+005D 900000      R     MOV     DPTR,#CCAP1_tmp
+0060 E0                MOVX    A,@DPTR
+0061 FE                MOV     R6,A
+0062 A3                INC     DPTR
+0063 E0                MOVX    A,@DPTR
+0064 F5EB              MOV     CCAP1L,A
+                                           ; SOURCE LINE # 171
+0066 EE                MOV     A,R6
+0067 F5FB              MOV     CCAP1H,A
+                                           ; SOURCE LINE # 172
+0069         ?C0025:
+                                           ; SOURCE LINE # 174
+0069 30DA2A            JNB     CCF2,?C0031
+                                           ; SOURCE LINE # 175
+C51 COMPILER V9.53.0.0   PCA                                                               03/25/2015 15:09:06 PAGE 14  
+
+                                           ; SOURCE LINE # 176
+006C C2DA              CLR     CCF2
+                                           ; SOURCE LINE # 177
+006E 30A705            JNB     P27,?C0029
+0071 900000      R     MOV     DPTR,#PCA_Timer2
+0074 8003              SJMP    ?C0036
+0076         ?C0029:
+                                           ; SOURCE LINE # 178
+0076 900000      R     MOV     DPTR,#PWM2_low
+0079         ?C0036:
+0079 E0                MOVX    A,@DPTR
+007A FE                MOV     R6,A
+007B A3                INC     DPTR
+007C E0                MOVX    A,@DPTR
+007D FF                MOV     R7,A
+007E 900000      R     MOV     DPTR,#CCAP2_tmp+01H
+0081 E0                MOVX    A,@DPTR
+0082 2F                ADD     A,R7
+0083 F0                MOVX    @DPTR,A
+0084 900000      R     MOV     DPTR,#CCAP2_tmp
+0087 E0                MOVX    A,@DPTR
+0088 3E                ADDC    A,R6
+0089 F0                MOVX    @DPTR,A
+008A         ?C0030:
+                                           ; SOURCE LINE # 179
+008A 900000      R     MOV     DPTR,#CCAP2_tmp
+008D E0                MOVX    A,@DPTR
+008E FE                MOV     R6,A
+008F A3                INC     DPTR
+0090 E0                MOVX    A,@DPTR
+0091 F5EC              MOV     CCAP2L,A
+                                           ; SOURCE LINE # 180
+0093 EE                MOV     A,R6
+0094 F5FC              MOV     CCAP2H,A
+                                           ; SOURCE LINE # 181
+                                           ; SOURCE LINE # 188
+0096         ?C0031:
+0096 D007              POP     AR7
+0098 D006              POP     AR6
+009A D0D0              POP     PSW
+009C D082              POP     DPL
+009E D083              POP     DPH
+00A0 D0E0              POP     ACC
+00A2 32                RETI    
+             ; FUNCTION PCA_Handler (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    752    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     21       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      3    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

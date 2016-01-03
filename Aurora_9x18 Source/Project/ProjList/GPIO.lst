@@ -1,0 +1,397 @@
+C51 COMPILER V9.53.0.0   GPIO                                                              03/25/2015 15:09:05 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE GPIO
+OBJECT MODULE PLACED IN ..\ProjOut\GPIO.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\GPIO.c LARGE OPTIMIZE(8,SPEED) CODE PRINT(..\Pr
+                    -ojList\GPIO.lst) OBJECT(..\ProjOut\GPIO.obj)
+
+line level    source
+
+   1          
+   2          /*************  功能说明        **************
+   3          
+   4          本文件为STC15xxx系列的端口初始化程序,用户几乎可以不修改这个程序.
+   5          
+   6          
+   7          ******************************************/
+   8          
+   9          #include        "GPIO.h"
+  10          
+  11          
+  12          //========================================================================
+  13          // 函数: u8     GPIO_Inilize(u8 GPIO, GPIO_InitTypeDef *GPIOx)
+  14          // 描述: 初始化IO口.
+  15          // 参数: GPIOx: 结构参数,请参考timer.h里的定义.
+  16          // 返回: 成功返回0, 空操作返回1,错误返回2.
+  17          // 版本: V1.0, 2012-10-22
+  18          //========================================================================
+  19          u8      GPIO_Inilize(u8 GPIO, GPIO_InitTypeDef *GPIOx)
+  20          {
+  21   1              if(GPIO > GPIO_P5)                              return 1;       //空操作
+  22   1              if(GPIOx->Mode > GPIO_OUT_PP)   return 2;       //错误
+  23   1              if(GPIO == GPIO_P0)
+  24   1              {
+  25   2                      if(GPIOx->Mode == GPIO_PullUp)          P0M1 &= ~GPIOx->Pin,    P0M0 &= ~GPIOx->Pin;     //上拉准双向口
+  26   2                      if(GPIOx->Mode == GPIO_HighZ)           P0M1 |=  GPIOx->Pin,    P0M0 &= ~GPIOx->Pin;     //浮空输入
+  27   2                      if(GPIOx->Mode == GPIO_OUT_OD)          P0M1 |=  GPIOx->Pin,    P0M0 |=  GPIOx->Pin;     //开漏输出
+  28   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P0M1 &= ~GPIOx->Pin,    P0M0 |=  GPIOx->Pin;     //推挽输出
+  29   2              }
+  30   1              if(GPIO == GPIO_P1)
+  31   1              {
+  32   2                      if(GPIOx->Mode == GPIO_PullUp)          P1M1 &= ~GPIOx->Pin,    P1M0 &= ~GPIOx->Pin;     //上拉准双向口
+  33   2                      if(GPIOx->Mode == GPIO_HighZ)           P1M1 |=  GPIOx->Pin,    P1M0 &= ~GPIOx->Pin;     //浮空输入
+  34   2                      if(GPIOx->Mode == GPIO_OUT_OD)          P1M1 |=  GPIOx->Pin,    P1M0 |=  GPIOx->Pin;     //开漏输出
+  35   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P1M1 &= ~GPIOx->Pin,    P1M0 |=  GPIOx->Pin;     //推挽输出
+  36   2              }
+  37   1              if(GPIO == GPIO_P2)
+  38   1              {
+  39   2                      if(GPIOx->Mode == GPIO_PullUp)          P2M1 &= ~GPIOx->Pin,    P2M0 &= ~GPIOx->Pin;     //上拉准双向口
+  40   2                      if(GPIOx->Mode == GPIO_HighZ)           P2M1 |=  GPIOx->Pin,    P2M0 &= ~GPIOx->Pin;     //浮空输入
+  41   2                      if(GPIOx->Mode == GPIO_OUT_OD)          P2M1 |=  GPIOx->Pin,    P2M0 |=  GPIOx->Pin;     //开漏输出
+  42   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P2M1 &= ~GPIOx->Pin,    P2M0 |=  GPIOx->Pin;     //推挽输出
+  43   2              }
+  44   1              if(GPIO == GPIO_P3)
+  45   1              {
+  46   2                      if(GPIOx->Mode == GPIO_PullUp)          P3M1 &= ~GPIOx->Pin,    P3M0 &= ~GPIOx->Pin;     //上拉准双向口
+  47   2                      if(GPIOx->Mode == GPIO_HighZ)           P3M1 |=  GPIOx->Pin,    P3M0 &= ~GPIOx->Pin;     //浮空输入
+  48   2                      if(GPIOx->Mode == GPIO_OUT_OD)          P3M1 |=  GPIOx->Pin,    P3M0 |=  GPIOx->Pin;     //开漏输出
+  49   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P3M1 &= ~GPIOx->Pin,    P3M0 |=  GPIOx->Pin;     //推挽输出
+  50   2              }
+  51   1              if(GPIO == GPIO_P4)
+  52   1              {
+  53   2                      if(GPIOx->Mode == GPIO_PullUp)          P4M1 &= ~GPIOx->Pin,    P4M0 &= ~GPIOx->Pin;     //上拉准双向口
+  54   2                      if(GPIOx->Mode == GPIO_HighZ)           P4M1 |=  GPIOx->Pin,    P4M0 &= ~GPIOx->Pin;     //浮空输入
+C51 COMPILER V9.53.0.0   GPIO                                                              03/25/2015 15:09:05 PAGE 2   
+
+  55   2                      if(GPIOx->Mode == GPIO_OUT_OD)          P4M1 |=  GPIOx->Pin,    P4M0 |=  GPIOx->Pin;     //开漏输出
+  56   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P4M1 &= ~GPIOx->Pin,    P4M0 |=  GPIOx->Pin;     //推挽输出
+  57   2              }
+  58   1              if(GPIO == GPIO_P5)
+  59   1              {
+  60   2                      if(GPIOx->Mode == GPIO_PullUp)          P5M1 &= ~GPIOx->Pin,    P5M0 &= ~GPIOx->Pin;     //上拉准双向口
+  61   2                      if(GPIOx->Mode == GPIO_HighZ)           P5M1 |=  GPIOx->Pin,    P5M0 &= ~GPIOx->Pin;     //浮空输入
+  62   2                      if(GPIOx->Mode == GPIO_OUT_OD)          P5M1 |=  GPIOx->Pin,    P5M0 |=  GPIOx->Pin;     //开漏输出
+  63   2                      if(GPIOx->Mode == GPIO_OUT_PP)          P5M1 &= ~GPIOx->Pin,    P5M0 |=  GPIOx->Pin;     //推挽输出
+  64   2              }
+  65   1              return 0;       //成功
+  66   1      }
+C51 COMPILER V9.53.0.0   GPIO                                                              03/25/2015 15:09:05 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _GPIO_Inilize (BEGIN)
+                                           ; SOURCE LINE # 19
+;---- Variable 'GPIOx' assigned to Register 'R1/R2/R3' ----
+;---- Variable 'GPIO' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 20
+                                           ; SOURCE LINE # 21
+0000 EF                MOV     A,R7
+0001 D3                SETB    C
+0002 9405              SUBB    A,#05H
+0004 4003              JC      ?C0001
+0006 7F01              MOV     R7,#01H
+0008 22                RET     
+0009         ?C0001:
+                                           ; SOURCE LINE # 22
+0009 120000      E     LCALL   ?C?CLDPTR
+000C FE                MOV     R6,A
+000D D3                SETB    C
+000E 9403              SUBB    A,#03H
+0010 4003              JC      ?C0003
+0012 7F02              MOV     R7,#02H
+0014 22                RET     
+0015         ?C0003:
+                                           ; SOURCE LINE # 23
+0015 EF                MOV     A,R7
+0016 7041              JNZ     ?C0004
+                                           ; SOURCE LINE # 24
+                                           ; SOURCE LINE # 25
+0018 EE                MOV     A,R6
+0019 700B              JNZ     ?C0005
+001B 900001            MOV     DPTR,#01H
+001E 120000      E     LCALL   ?C?CLDOPTR
+0021 F4                CPL     A
+0022 5293              ANL     P0M1,A
+0024 5294              ANL     P0M0,A
+0026         ?C0005:
+                                           ; SOURCE LINE # 26
+0026 120000      E     LCALL   ?C?CLDPTR
+0029 B4010B            CJNE    A,#01H,?C0006
+002C 900001            MOV     DPTR,#01H
+002F 120000      E     LCALL   ?C?CLDOPTR
+0032 4293              ORL     P0M1,A
+0034 F4                CPL     A
+0035 5294              ANL     P0M0,A
+0037         ?C0006:
+                                           ; SOURCE LINE # 27
+0037 120000      E     LCALL   ?C?CLDPTR
+003A FE                MOV     R6,A
+003B B4020A            CJNE    A,#02H,?C0007
+003E 900001            MOV     DPTR,#01H
+0041 120000      E     LCALL   ?C?CLDOPTR
+0044 4293              ORL     P0M1,A
+0046 4294              ORL     P0M0,A
+0048         ?C0007:
+                                           ; SOURCE LINE # 28
+0048 EE                MOV     A,R6
+0049 B4030D            CJNE    A,#03H,?C0004
+004C 900001            MOV     DPTR,#01H
+004F 120000      E     LCALL   ?C?CLDOPTR
+0052 FE                MOV     R6,A
+C51 COMPILER V9.53.0.0   GPIO                                                              03/25/2015 15:09:05 PAGE 4   
+
+0053 F4                CPL     A
+0054 5293              ANL     P0M1,A
+0056 EE                MOV     A,R6
+0057 4294              ORL     P0M0,A
+                                           ; SOURCE LINE # 29
+0059         ?C0004:
+                                           ; SOURCE LINE # 30
+0059 EF                MOV     A,R7
+005A 6401              XRL     A,#01H
+005C 7043              JNZ     ?C0009
+                                           ; SOURCE LINE # 31
+                                           ; SOURCE LINE # 32
+005E 120000      E     LCALL   ?C?CLDPTR
+0061 FE                MOV     R6,A
+0062 700B              JNZ     ?C0010
+0064 900001            MOV     DPTR,#01H
+0067 120000      E     LCALL   ?C?CLDOPTR
+006A F4                CPL     A
+006B 5291              ANL     P1M1,A
+006D 5292              ANL     P1M0,A
+006F         ?C0010:
+                                           ; SOURCE LINE # 33
+006F EE                MOV     A,R6
+0070 B4010B            CJNE    A,#01H,?C0011
+0073 900001            MOV     DPTR,#01H
+0076 120000      E     LCALL   ?C?CLDOPTR
+0079 4291              ORL     P1M1,A
+007B F4                CPL     A
+007C 5292              ANL     P1M0,A
+007E         ?C0011:
+                                           ; SOURCE LINE # 34
+007E 120000      E     LCALL   ?C?CLDPTR
+0081 B4020A            CJNE    A,#02H,?C0012
+0084 900001            MOV     DPTR,#01H
+0087 120000      E     LCALL   ?C?CLDOPTR
+008A 4291              ORL     P1M1,A
+008C 4292              ORL     P1M0,A
+008E         ?C0012:
+                                           ; SOURCE LINE # 35
+008E 120000      E     LCALL   ?C?CLDPTR
+0091 B4030D            CJNE    A,#03H,?C0009
+0094 900001            MOV     DPTR,#01H
+0097 120000      E     LCALL   ?C?CLDOPTR
+009A FE                MOV     R6,A
+009B F4                CPL     A
+009C 5291              ANL     P1M1,A
+009E EE                MOV     A,R6
+009F 4292              ORL     P1M0,A
+                                           ; SOURCE LINE # 36
+00A1         ?C0009:
+                                           ; SOURCE LINE # 37
+00A1 EF                MOV     A,R7
+00A2 6402              XRL     A,#02H
+00A4 7043              JNZ     ?C0014
+                                           ; SOURCE LINE # 38
+                                           ; SOURCE LINE # 39
+00A6 120000      E     LCALL   ?C?CLDPTR
+00A9 FE                MOV     R6,A
+00AA 700B              JNZ     ?C0015
+00AC 900001            MOV     DPTR,#01H
+00AF 120000      E     LCALL   ?C?CLDOPTR
+00B2 F4                CPL     A
+C51 COMPILER V9.53.0.0   GPIO                                                              03/25/2015 15:09:05 PAGE 5   
+
+00B3 5295              ANL     P2M1,A
+00B5 5296              ANL     P2M0,A
+00B7         ?C0015:
+                                           ; SOURCE LINE # 40
+00B7 EE                MOV     A,R6
+00B8 B4010B            CJNE    A,#01H,?C0016
+00BB 900001            MOV     DPTR,#01H
+00BE 120000      E     LCALL   ?C?CLDOPTR
+00C1 4295              ORL     P2M1,A
+00C3 F4                CPL     A
+00C4 5296              ANL     P2M0,A
+00C6         ?C0016:
+                                           ; SOURCE LINE # 41
+00C6 120000      E     LCALL   ?C?CLDPTR
+00C9 B4020A            CJNE    A,#02H,?C0017
+00CC 900001            MOV     DPTR,#01H
+00CF 120000      E     LCALL   ?C?CLDOPTR
+00D2 4295              ORL     P2M1,A
+00D4 4296              ORL     P2M0,A
+00D6         ?C0017:
+                                           ; SOURCE LINE # 42
+00D6 120000      E     LCALL   ?C?CLDPTR
+00D9 B4030D            CJNE    A,#03H,?C0014
+00DC 900001            MOV     DPTR,#01H
+00DF 120000      E     LCALL   ?C?CLDOPTR
+00E2 FE                MOV     R6,A
+00E3 F4                CPL     A
+00E4 5295              ANL     P2M1,A
+00E6 EE                MOV     A,R6
+00E7 4296              ORL     P2M0,A
+                                           ; SOURCE LINE # 43
+00E9         ?C0014:
+                                           ; SOURCE LINE # 44
+00E9 EF                MOV     A,R7
+00EA 6403              XRL     A,#03H
+00EC 7043              JNZ     ?C0019
+                                           ; SOURCE LINE # 45
+                                           ; SOURCE LINE # 46
+00EE 120000      E     LCALL   ?C?CLDPTR
+00F1 FE                MOV     R6,A
+00F2 700B              JNZ     ?C0020
+00F4 900001            MOV     DPTR,#01H
+00F7 120000      E     LCALL   ?C?CLDOPTR
+00FA F4                CPL     A
+00FB 52B1              ANL     P3M1,A
+00FD 52B2              ANL     P3M0,A
+00FF         ?C0020:
+                                           ; SOURCE LINE # 47
+00FF EE                MOV     A,R6
+0100 B4010B            CJNE    A,#01H,?C0021
+0103 900001            MOV     DPTR,#01H
+0106 120000      E     LCALL   ?C?CLDOPTR
+0109 42B1              ORL     P3M1,A
+010B F4                CPL     A
+010C 52B2              ANL     P3M0,A
+010E         ?C0021:
+                                           ; SOURCE LINE # 48
+010E 120000      E     LCALL   ?C?CLDPTR
+0111 B4020A            CJNE    A,#02H,?C0022
+0114 900001            MOV     DPTR,#01H
+0117 120000      E     LCALL   ?C?CLDOPTR
+011A 42B1              ORL     P3M1,A
+C51 COMPILER V9.53.0.0   GPIO                                                              03/25/2015 15:09:05 PAGE 6   
+
+011C 42B2              ORL     P3M0,A
+011E         ?C0022:
+                                           ; SOURCE LINE # 49
+011E 120000      E     LCALL   ?C?CLDPTR
+0121 B4030D            CJNE    A,#03H,?C0019
+0124 900001            MOV     DPTR,#01H
+0127 120000      E     LCALL   ?C?CLDOPTR
+012A FE                MOV     R6,A
+012B F4                CPL     A
+012C 52B1              ANL     P3M1,A
+012E EE                MOV     A,R6
+012F 42B2              ORL     P3M0,A
+                                           ; SOURCE LINE # 50
+0131         ?C0019:
+                                           ; SOURCE LINE # 51
+0131 EF                MOV     A,R7
+0132 6404              XRL     A,#04H
+0134 7043              JNZ     ?C0024
+                                           ; SOURCE LINE # 52
+                                           ; SOURCE LINE # 53
+0136 120000      E     LCALL   ?C?CLDPTR
+0139 FE                MOV     R6,A
+013A 700B              JNZ     ?C0025
+013C 900001            MOV     DPTR,#01H
+013F 120000      E     LCALL   ?C?CLDOPTR
+0142 F4                CPL     A
+0143 52B3              ANL     P4M1,A
+0145 52B4              ANL     P4M0,A
+0147         ?C0025:
+                                           ; SOURCE LINE # 54
+0147 EE                MOV     A,R6
+0148 B4010B            CJNE    A,#01H,?C0026
+014B 900001            MOV     DPTR,#01H
+014E 120000      E     LCALL   ?C?CLDOPTR
+0151 42B3              ORL     P4M1,A
+0153 F4                CPL     A
+0154 52B4              ANL     P4M0,A
+0156         ?C0026:
+                                           ; SOURCE LINE # 55
+0156 120000      E     LCALL   ?C?CLDPTR
+0159 B4020A            CJNE    A,#02H,?C0027
+015C 900001            MOV     DPTR,#01H
+015F 120000      E     LCALL   ?C?CLDOPTR
+0162 42B3              ORL     P4M1,A
+0164 42B4              ORL     P4M0,A
+0166         ?C0027:
+                                           ; SOURCE LINE # 56
+0166 120000      E     LCALL   ?C?CLDPTR
+0169 B4030D            CJNE    A,#03H,?C0024
+016C 900001            MOV     DPTR,#01H
+016F 120000      E     LCALL   ?C?CLDOPTR
+0172 FE                MOV     R6,A
+0173 F4                CPL     A
+0174 52B3              ANL     P4M1,A
+0176 EE                MOV     A,R6
+0177 42B4              ORL     P4M0,A
+                                           ; SOURCE LINE # 57
+0179         ?C0024:
+                                           ; SOURCE LINE # 58
+0179 EF                MOV     A,R7
+017A 6405              XRL     A,#05H
+017C 7043              JNZ     ?C0029
+C51 COMPILER V9.53.0.0   GPIO                                                              03/25/2015 15:09:05 PAGE 7   
+
+                                           ; SOURCE LINE # 59
+                                           ; SOURCE LINE # 60
+017E 120000      E     LCALL   ?C?CLDPTR
+0181 FF                MOV     R7,A
+0182 700B              JNZ     ?C0030
+0184 900001            MOV     DPTR,#01H
+0187 120000      E     LCALL   ?C?CLDOPTR
+018A F4                CPL     A
+018B 52C9              ANL     P5M1,A
+018D 52CA              ANL     P5M0,A
+018F         ?C0030:
+                                           ; SOURCE LINE # 61
+018F EF                MOV     A,R7
+0190 B4010B            CJNE    A,#01H,?C0031
+0193 900001            MOV     DPTR,#01H
+0196 120000      E     LCALL   ?C?CLDOPTR
+0199 42C9              ORL     P5M1,A
+019B F4                CPL     A
+019C 52CA              ANL     P5M0,A
+019E         ?C0031:
+                                           ; SOURCE LINE # 62
+019E 120000      E     LCALL   ?C?CLDPTR
+01A1 B4020A            CJNE    A,#02H,?C0032
+01A4 900001            MOV     DPTR,#01H
+01A7 120000      E     LCALL   ?C?CLDOPTR
+01AA 42C9              ORL     P5M1,A
+01AC 42CA              ORL     P5M0,A
+01AE         ?C0032:
+                                           ; SOURCE LINE # 63
+01AE 120000      E     LCALL   ?C?CLDPTR
+01B1 B4030D            CJNE    A,#03H,?C0029
+01B4 900001            MOV     DPTR,#01H
+01B7 120000      E     LCALL   ?C?CLDOPTR
+01BA FF                MOV     R7,A
+01BB F4                CPL     A
+01BC 52C9              ANL     P5M1,A
+01BE EF                MOV     A,R7
+01BF 42CA              ORL     P5M0,A
+                                           ; SOURCE LINE # 64
+01C1         ?C0029:
+                                           ; SOURCE LINE # 65
+01C1 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 66
+01C3         ?C0002:
+01C3 22                RET     
+             ; FUNCTION _GPIO_Inilize (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    452    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

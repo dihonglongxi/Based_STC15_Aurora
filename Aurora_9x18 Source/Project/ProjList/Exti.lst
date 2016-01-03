@@ -1,0 +1,324 @@
+C51 COMPILER V9.53.0.0   EXTI                                                              03/25/2015 15:09:05 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE EXTI
+OBJECT MODULE PLACED IN ..\ProjOut\Exti.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\Exti.c LARGE OPTIMIZE(8,SPEED) CODE PRINT(..\Pr
+                    -ojList\Exti.lst) OBJECT(..\ProjOut\Exti.obj)
+
+line level    source
+
+   1          
+   2          /*************  功能说明        **************
+   3          
+   4          本文件为STC15xxx系列的外中断初始化和中断程序,用户可以在这个文件中修改自己需要的中断程序.
+   5          
+   6          ******************************************/
+   7          
+   8          
+   9          
+  10          #include        "Exti.h"
+  11          
+  12          
+  13          /********************* INT0中断函数 *************************/
+  14          void Ext_INT0 (void) interrupt INT0_VECTOR              //进中断时已经清除标志
+  15          {
+  16   1              
+  17   1          P32 = 1;
+  18   1      }
+  19          
+  20          /********************* INT1中断函数 *************************/
+  21          void Ext_INT1 (void) interrupt INT1_VECTOR              //进中断时已经清除标志
+  22          {
+  23   1              
+  24   1          P33 = 1;
+  25   1      }
+  26          
+  27          /********************* INT2中断函数 *************************/
+  28          void Ext_INT2 (void) interrupt INT2_VECTOR      //
+  29          {
+  30   1          ;
+  31   1      }
+  32          
+  33          /********************* INT3中断函数 *************************/
+  34          void Ext_INT3 (void) interrupt INT3_VECTOR
+  35          {
+  36   1          ;
+  37   1      }
+  38          
+  39          /********************* INT4中断函数 *************************/
+  40          void Ext_INT4 (void) interrupt INT4_VECTOR
+  41          {
+  42   1          ;
+  43   1      }
+  44          
+  45          //========================================================================
+  46          // 函数: u8     Ext_Inilize(u8 EXT, EXTI_InitTypeDef *INTx)
+  47          // 描述: 外部中断初始化程序.
+  48          // 参数: INTx: 结构参数,请参考Exti.h里的定义.
+  49          // 返回: 成功返回0, 空操作返回1,错误返回2.
+  50          // 版本: V1.0, 2012-10-22
+  51          //========================================================================
+  52          u8      Ext_Inilize(u8 EXT, EXTI_InitTypeDef *INTx)
+  53          {
+  54   1              if(EXT >  EXT_INT4)     return 1;       //空操作
+C51 COMPILER V9.53.0.0   EXTI                                                              03/25/2015 15:09:05 PAGE 2   
+
+  55   1              
+  56   1              if(EXT == EXT_INT0)     //外中断0
+  57   1              {
+  58   2                      if(INTx->EXTI_Interrupt == ENABLE)              EX0 = 1;        //允许中断
+  59   2                      else                                                                    EX0 = 0;        //禁止中断
+  60   2                      if(INTx->EXTI_Polity == PolityHigh)             PX0 = 1;        //高优先级中断
+  61   2                      else                                                                    PX0 = 0;        //低优先级中断
+  62   2                      if(INTx->EXTI_Mode == EXT_MODE_Fall)    IT0 = 1;        //下降沿中断
+  63   2                      else                                                                    IT0 = 0;        //上升,下降沿中断
+  64   2                      return  0;              //成功
+  65   2              }
+  66   1      
+  67   1              if(EXT == EXT_INT1)     //外中断1
+  68   1              {
+  69   2                      if(INTx->EXTI_Interrupt == ENABLE)              EX1 = 1;        //允许中断
+  70   2                      else                                                                    EX1 = 0;        //禁止中断
+  71   2                      if(INTx->EXTI_Polity == PolityHigh)             PX1 = 1;        //高优先级中断
+  72   2                      else                                                                    PX1 = 0;        //低优先级中断
+  73   2                      if(INTx->EXTI_Mode == EXT_MODE_Fall)    IT1 = 1;        //下降沿中断
+  74   2                      else                                                                    IT1 = 0;        //上升,下降沿中断
+  75   2                      return  0;              //成功
+  76   2              }
+  77   1      
+  78   1              if(EXT == EXT_INT2)             //外中断2, 固定为下降沿低优先级中断
+  79   1              {
+  80   2                      if(INTx->EXTI_Interrupt == ENABLE)      INT_CLKO |=  (1 << 4);  //允许中断      
+  81   2                      else                                                            INT_CLKO &= ~(1 << 4);  //禁止中断
+  82   2                      return  0;              //成功
+  83   2              }
+  84   1      
+  85   1              if(EXT == EXT_INT3)             //外中断3, 固定为下降沿低优先级中断
+  86   1              {
+  87   2                      if(INTx->EXTI_Interrupt == ENABLE)      INT_CLKO |=  (1 << 5);  //允许中断      
+  88   2                      else                                                            INT_CLKO &= ~(1 << 5);  //禁止中断
+  89   2                      return  0;              //成功
+  90   2              }
+  91   1      
+  92   1              if(EXT == EXT_INT4)             //外中断4, 固定为下降沿低优先级中断
+  93   1              {
+  94   2                      if(INTx->EXTI_Interrupt == ENABLE)      INT_CLKO |=  (1 << 6);  //允许中断      
+  95   2                      else                                                            INT_CLKO &= ~(1 << 6);  //禁止中断
+  96   2                      return  0;              //成功
+  97   2              }
+  98   1              return 2;       //失败
+  99   1      }
+C51 COMPILER V9.53.0.0   EXTI                                                              03/25/2015 15:09:05 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION Ext_INT0 (BEGIN)
+                                           ; SOURCE LINE # 14
+                                           ; SOURCE LINE # 17
+0000 D2B2              SETB    P32
+                                           ; SOURCE LINE # 18
+0002 32                RETI    
+             ; FUNCTION Ext_INT0 (END)
+
+             ; FUNCTION Ext_INT1 (BEGIN)
+                                           ; SOURCE LINE # 21
+                                           ; SOURCE LINE # 24
+0000 D2B3              SETB    P33
+                                           ; SOURCE LINE # 25
+0002 32                RETI    
+             ; FUNCTION Ext_INT1 (END)
+
+             ; FUNCTION Ext_INT2 (BEGIN)
+                                           ; SOURCE LINE # 28
+                                           ; SOURCE LINE # 31
+0000 32                RETI    
+             ; FUNCTION Ext_INT2 (END)
+
+             ; FUNCTION Ext_INT3 (BEGIN)
+                                           ; SOURCE LINE # 34
+                                           ; SOURCE LINE # 37
+0000 32                RETI    
+             ; FUNCTION Ext_INT3 (END)
+
+             ; FUNCTION Ext_INT4 (BEGIN)
+                                           ; SOURCE LINE # 40
+                                           ; SOURCE LINE # 43
+0000 32                RETI    
+             ; FUNCTION Ext_INT4 (END)
+
+             ; FUNCTION _Ext_Inilize (BEGIN)
+                                           ; SOURCE LINE # 52
+;---- Variable 'INTx' assigned to Register 'R1/R2/R3' ----
+;---- Variable 'EXT' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 53
+                                           ; SOURCE LINE # 54
+0000 EF                MOV     A,R7
+0001 D3                SETB    C
+0002 9404              SUBB    A,#04H
+0004 4003              JC      ?C0006
+0006 7F01              MOV     R7,#01H
+0008 22                RET     
+0009         ?C0006:
+                                           ; SOURCE LINE # 56
+0009 EF                MOV     A,R7
+000A 702D              JNZ     ?C0008
+                                           ; SOURCE LINE # 57
+                                           ; SOURCE LINE # 58
+000C 900002            MOV     DPTR,#02H
+000F 120000      E     LCALL   ?C?CLDOPTR
+0012 B40104            CJNE    A,#01H,?C0009
+0015 D2A8              SETB    EX0
+0017 8002              SJMP    ?C0010
+0019         ?C0009:
+                                           ; SOURCE LINE # 59
+C51 COMPILER V9.53.0.0   EXTI                                                              03/25/2015 15:09:05 PAGE 4   
+
+0019 C2A8              CLR     EX0
+001B         ?C0010:
+                                           ; SOURCE LINE # 60
+001B 900001            MOV     DPTR,#01H
+001E 120000      E     LCALL   ?C?CLDOPTR
+0021 B40104            CJNE    A,#01H,?C0011
+0024 D2B8              SETB    PX0
+0026 8002              SJMP    ?C0012
+0028         ?C0011:
+                                           ; SOURCE LINE # 61
+0028 C2B8              CLR     PX0
+002A         ?C0012:
+                                           ; SOURCE LINE # 62
+002A 120000      E     LCALL   ?C?CLDPTR
+002D B40104            CJNE    A,#01H,?C0013
+0030 D288              SETB    IT0
+0032 8002              SJMP    ?C0014
+0034         ?C0013:
+                                           ; SOURCE LINE # 63
+0034 C288              CLR     IT0
+0036         ?C0014:
+                                           ; SOURCE LINE # 64
+0036 7F00              MOV     R7,#00H
+0038 22                RET     
+                                           ; SOURCE LINE # 65
+0039         ?C0008:
+                                           ; SOURCE LINE # 67
+0039 EF                MOV     A,R7
+003A 6401              XRL     A,#01H
+003C 702D              JNZ     ?C0015
+                                           ; SOURCE LINE # 68
+                                           ; SOURCE LINE # 69
+003E 900002            MOV     DPTR,#02H
+0041 120000      E     LCALL   ?C?CLDOPTR
+0044 B40104            CJNE    A,#01H,?C0016
+0047 D2AA              SETB    EX1
+0049 8002              SJMP    ?C0017
+004B         ?C0016:
+                                           ; SOURCE LINE # 70
+004B C2AA              CLR     EX1
+004D         ?C0017:
+                                           ; SOURCE LINE # 71
+004D 900001            MOV     DPTR,#01H
+0050 120000      E     LCALL   ?C?CLDOPTR
+0053 B40104            CJNE    A,#01H,?C0018
+0056 D2BA              SETB    PX1
+0058 8002              SJMP    ?C0019
+005A         ?C0018:
+                                           ; SOURCE LINE # 72
+005A C2BA              CLR     PX1
+005C         ?C0019:
+                                           ; SOURCE LINE # 73
+005C 120000      E     LCALL   ?C?CLDPTR
+005F B40104            CJNE    A,#01H,?C0020
+0062 D28A              SETB    IT1
+0064 8002              SJMP    ?C0021
+0066         ?C0020:
+                                           ; SOURCE LINE # 74
+0066 C28A              CLR     IT1
+0068         ?C0021:
+                                           ; SOURCE LINE # 75
+0068 7F00              MOV     R7,#00H
+C51 COMPILER V9.53.0.0   EXTI                                                              03/25/2015 15:09:05 PAGE 5   
+
+006A 22                RET     
+                                           ; SOURCE LINE # 76
+006B         ?C0015:
+                                           ; SOURCE LINE # 78
+006B EF                MOV     A,R7
+006C B40214            CJNE    A,#02H,?C0022
+                                           ; SOURCE LINE # 79
+                                           ; SOURCE LINE # 80
+006F 900002            MOV     DPTR,#02H
+0072 120000      E     LCALL   ?C?CLDOPTR
+0075 B40105            CJNE    A,#01H,?C0023
+0078 438F10            ORL     INT_CLKO,#010H
+007B 8003              SJMP    ?C0024
+007D         ?C0023:
+                                           ; SOURCE LINE # 81
+007D 538FEF            ANL     INT_CLKO,#0EFH
+0080         ?C0024:
+                                           ; SOURCE LINE # 82
+0080 7F00              MOV     R7,#00H
+0082 22                RET     
+                                           ; SOURCE LINE # 83
+0083         ?C0022:
+                                           ; SOURCE LINE # 85
+0083 EF                MOV     A,R7
+0084 B40314            CJNE    A,#03H,?C0025
+                                           ; SOURCE LINE # 86
+                                           ; SOURCE LINE # 87
+0087 900002            MOV     DPTR,#02H
+008A 120000      E     LCALL   ?C?CLDOPTR
+008D B40105            CJNE    A,#01H,?C0026
+0090 438F20            ORL     INT_CLKO,#020H
+0093 8003              SJMP    ?C0027
+0095         ?C0026:
+                                           ; SOURCE LINE # 88
+0095 538FDF            ANL     INT_CLKO,#0DFH
+0098         ?C0027:
+                                           ; SOURCE LINE # 89
+0098 7F00              MOV     R7,#00H
+009A 22                RET     
+                                           ; SOURCE LINE # 90
+009B         ?C0025:
+                                           ; SOURCE LINE # 92
+009B EF                MOV     A,R7
+009C B40414            CJNE    A,#04H,?C0028
+                                           ; SOURCE LINE # 93
+                                           ; SOURCE LINE # 94
+009F 900002            MOV     DPTR,#02H
+00A2 120000      E     LCALL   ?C?CLDOPTR
+00A5 B40105            CJNE    A,#01H,?C0029
+00A8 438F40            ORL     INT_CLKO,#040H
+00AB 8003              SJMP    ?C0030
+00AD         ?C0029:
+                                           ; SOURCE LINE # 95
+00AD 538FBF            ANL     INT_CLKO,#0BFH
+00B0         ?C0030:
+                                           ; SOURCE LINE # 96
+00B0 7F00              MOV     R7,#00H
+00B2 22                RET     
+                                           ; SOURCE LINE # 97
+00B3         ?C0028:
+                                           ; SOURCE LINE # 98
+00B3 7F02              MOV     R7,#02H
+C51 COMPILER V9.53.0.0   EXTI                                                              03/25/2015 15:09:05 PAGE 6   
+
+                                           ; SOURCE LINE # 99
+00B5         ?C0007:
+00B5 22                RET     
+             ; FUNCTION _Ext_Inilize (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    191    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
