@@ -1,21 +1,12 @@
-#ifndef __STC15F2K60S2_H_
+ï»¿#ifndef __STC15F2K60S2_H_
 #define __STC15F2K60S2_H_
 
-/////////////////////////////////////////////////
-//×¢Òâ: STC15W4K32S4ÏµÁĞµÄĞ¾Æ¬,ÉÏµçºóËùÓĞÓëPWMÏà¹ØµÄIO¿Ú¾ùÎª
-//      ¸ß×èÌ¬,Ğè½«ÕâĞ©¿ÚÉèÖÃÎª×¼Ë«Ïò¿Ú»òÇ¿ÍÆÍìÄ£Ê½·½¿ÉÕı³£Ê¹ÓÃ
-//Ïà¹ØIO: P0.6/P0.7/P1.6/P1.7/P2.1/P2.2
-//        P2.3/P2.7/P3.7/P4.2/P4.4/P4.5
-/////////////////////////////////////////////////
+//åŒ…å«æœ¬å¤´æ–‡ä»¶å,ä¸ç”¨å¦å¤–å†åŒ…å«"REG51.H"
 
-/////////////////////////////////////////////////
-
-//°üº¬±¾Í·ÎÄ¼şºó,²»ÓÃÁíÍâÔÙ°üº¬"REG51.H"
-
-//ÄÚºËÌØÊâ¹¦ÄÜ¼Ä´æÆ÷        // ¸´Î»Öµ   ÃèÊö
-sfr ACC         =   0xE0;   //0000,0000 ÀÛ¼ÓÆ÷Accumulator
-sfr B           =   0xF0;   //0000,0000 B¼Ä´æÆ÷
-sfr PSW         =   0xD0;   //0000,0000 ³ÌĞò×´Ì¬×Ö
+//å†…æ ¸ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨        // å¤ä½å€¼   æè¿°
+sfr ACC         =   0xE0;   //0000,0000 ç´¯åŠ å™¨Accumulator
+sfr B           =   0xF0;   //0000,0000 Bå¯„å­˜å™¨
+sfr PSW         =   0xD0;   //0000,0000 ç¨‹åºçŠ¶æ€å­—
 sbit CY         =   PSW^7;
 sbit AC         =   PSW^6;
 sbit F0         =   PSW^5;
@@ -23,12 +14,12 @@ sbit RS1        =   PSW^4;
 sbit RS0        =   PSW^3;
 sbit OV         =   PSW^2;
 sbit P          =   PSW^0;
-sfr SP          =   0x81;   //0000,0111 ¶ÑÕ»Ö¸Õë
-sfr DPL         =   0x82;   //0000,0000 Êı¾İÖ¸ÕëµÍ×Ö½Ú
-sfr DPH         =   0x83;   //0000,0000 Êı¾İÖ¸Õë¸ß×Ö½Ú
+sfr SP          =   0x81;   //0000,0111 å †æ ˆæŒ‡é’ˆ
+sfr DPL         =   0x82;   //0000,0000 æ•°æ®æŒ‡é’ˆä½å­—èŠ‚
+sfr DPH         =   0x83;   //0000,0000 æ•°æ®æŒ‡é’ˆé«˜å­—èŠ‚
 
-//I/O ¿ÚÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr P0          =   0x80;   //1111,1111 ¶Ë¿Ú0
+//I/O å£ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr P0          =   0x80;   //1111,1111 ç«¯å£0
 sbit P00        =   P0^0;
 sbit P01        =   P0^1;
 sbit P02        =   P0^2;
@@ -37,7 +28,7 @@ sbit P04        =   P0^4;
 sbit P05        =   P0^5;
 sbit P06        =   P0^6;
 sbit P07        =   P0^7;
-sfr P1          =   0x90;   //1111,1111 ¶Ë¿Ú1
+sfr P1          =   0x90;   //1111,1111 ç«¯å£1
 sbit P10        =   P1^0;
 sbit P11        =   P1^1;
 sbit P12        =   P1^2;
@@ -46,7 +37,7 @@ sbit P14        =   P1^4;
 sbit P15        =   P1^5;
 sbit P16        =   P1^6;
 sbit P17        =   P1^7;
-sfr P2          =   0xA0;   //1111,1111 ¶Ë¿Ú2
+sfr P2          =   0xA0;   //1111,1111 ç«¯å£2
 sbit P20        =   P2^0;
 sbit P21        =   P2^1;
 sbit P22        =   P2^2;
@@ -55,7 +46,7 @@ sbit P24        =   P2^4;
 sbit P25        =   P2^5;
 sbit P26        =   P2^6;
 sbit P27        =   P2^7;
-sfr P3          =   0xB0;   //1111,1111 ¶Ë¿Ú3
+sfr P3          =   0xB0;   //1111,1111 ç«¯å£3
 sbit P30        =   P3^0;
 sbit P31        =   P3^1;
 sbit P32        =   P3^2;
@@ -64,7 +55,7 @@ sbit P34        =   P3^4;
 sbit P35        =   P3^5;
 sbit P36        =   P3^6;
 sbit P37        =   P3^7;
-sfr P4          =   0xC0;   //1111,1111 ¶Ë¿Ú4
+sfr P4          =   0xC0;   //1111,1111 ç«¯å£4
 sbit P40        =   P4^0;
 sbit P41        =   P4^1;
 sbit P42        =   P4^2;
@@ -73,7 +64,7 @@ sbit P44        =   P4^4;
 sbit P45        =   P4^5;
 sbit P46        =   P4^6;
 sbit P47        =   P4^7;
-sfr P5          =   0xC8;   //xxxx,1111 ¶Ë¿Ú5
+sfr P5          =   0xC8;   //xxxx,1111 ç«¯å£5
 sbit P50        =   P5^0;
 sbit P51        =   P5^1;
 sbit P52        =   P5^2;
@@ -82,53 +73,31 @@ sbit P54        =   P5^4;
 sbit P55        =   P5^5;
 sbit P56        =   P5^6;
 sbit P57        =   P5^7;
-sfr P6          =   0xE8;   //0000,0000 ¶Ë¿Ú6
-sbit P60        =   P6^0;
-sbit P61        =   P6^1;
-sbit P62        =   P6^2;
-sbit P63        =   P6^3;
-sbit P64        =   P6^4;
-sbit P65        =   P6^5;
-sbit P66        =   P6^6;
-sbit P67        =   P6^7;
-sfr P7          =   0xF8;   //0000,0000 ¶Ë¿Ú7
-sbit P70        =   P7^0;
-sbit P71        =   P7^1;
-sbit P72        =   P7^2;
-sbit P73        =   P7^3;
-sbit P74        =   P7^4;
-sbit P75        =   P7^5;
-sbit P76        =   P7^6;
-sbit P77        =   P7^7;
-sfr P0M0        =   0x94;   //0000,0000 ¶Ë¿Ú0Ä£Ê½¼Ä´æÆ÷0
-sfr P0M1        =   0x93;   //0000,0000 ¶Ë¿Ú0Ä£Ê½¼Ä´æÆ÷1
-sfr P1M0        =   0x92;   //0000,0000 ¶Ë¿Ú1Ä£Ê½¼Ä´æÆ÷0
-sfr P1M1        =   0x91;   //0000,0000 ¶Ë¿Ú1Ä£Ê½¼Ä´æÆ÷1
-sfr P2M0        =   0x96;   //0000,0000 ¶Ë¿Ú2Ä£Ê½¼Ä´æÆ÷0
-sfr P2M1        =   0x95;   //0000,0000 ¶Ë¿Ú2Ä£Ê½¼Ä´æÆ÷1
-sfr P3M0        =   0xB2;   //0000,0000 ¶Ë¿Ú3Ä£Ê½¼Ä´æÆ÷0
-sfr P3M1        =   0xB1;   //0000,0000 ¶Ë¿Ú3Ä£Ê½¼Ä´æÆ÷1
-sfr P4M0        =   0xB4;   //0000,0000 ¶Ë¿Ú4Ä£Ê½¼Ä´æÆ÷0
-sfr P4M1        =   0xB3;   //0000,0000 ¶Ë¿Ú4Ä£Ê½¼Ä´æÆ÷1
-sfr P5M0        =   0xCA;   //0000,0000 ¶Ë¿Ú5Ä£Ê½¼Ä´æÆ÷0
-sfr P5M1        =   0xC9;   //0000,0000 ¶Ë¿Ú5Ä£Ê½¼Ä´æÆ÷1
-sfr P6M0        =   0xCC;   //0000,0000 ¶Ë¿Ú6Ä£Ê½¼Ä´æÆ÷0
-sfr P6M1        =   0xCB;   //0000,0000 ¶Ë¿Ú6Ä£Ê½¼Ä´æÆ÷1
-sfr P7M0        =   0xE2;   //0000,0000 ¶Ë¿Ú7Ä£Ê½¼Ä´æÆ÷0
-sfr P7M1        =   0xE1;   //0000,0000 ¶Ë¿Ú7Ä£Ê½¼Ä´æÆ÷1
+sfr P0M0        =   0x94;   //0000,0000 ç«¯å£0æ¨¡å¼å¯„å­˜å™¨0
+sfr P0M1        =   0x93;   //0000,0000 ç«¯å£0æ¨¡å¼å¯„å­˜å™¨1
+sfr P1M0        =   0x92;   //0000,0000 ç«¯å£1æ¨¡å¼å¯„å­˜å™¨0
+sfr P1M1        =   0x91;   //0000,0000 ç«¯å£1æ¨¡å¼å¯„å­˜å™¨1
+sfr P2M0        =   0x96;   //0000,0000 ç«¯å£2æ¨¡å¼å¯„å­˜å™¨0
+sfr P2M1        =   0x95;   //0000,0000 ç«¯å£2æ¨¡å¼å¯„å­˜å™¨1
+sfr P3M0        =   0xB2;   //0000,0000 ç«¯å£3æ¨¡å¼å¯„å­˜å™¨0
+sfr P3M1        =   0xB1;   //0000,0000 ç«¯å£3æ¨¡å¼å¯„å­˜å™¨1
+sfr P4M0        =   0xB4;   //0000,0000 ç«¯å£4æ¨¡å¼å¯„å­˜å™¨0
+sfr P4M1        =   0xB3;   //0000,0000 ç«¯å£4æ¨¡å¼å¯„å­˜å™¨1
+sfr P5M0        =   0xCA;   //0000,0000 ç«¯å£5æ¨¡å¼å¯„å­˜å™¨0
+sfr P5M1        =   0xC9;   //0000,0000 ç«¯å£5æ¨¡å¼å¯„å­˜å™¨1
 
-//ÏµÍ³¹ÜÀíÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr PCON        =   0x87;   //0001,0000 µçÔ´¿ØÖÆ¼Ä´æÆ÷
-sfr AUXR        =   0x8E;   //0000,0000 ¸¨Öú¼Ä´æÆ÷
-sfr AUXR1       =   0xA2;   //0000,0000 ¸¨Öú¼Ä´æÆ÷1
-sfr P_SW1       =   0xA2;   //0000,0000 ÍâÉè¶Ë¿ÚÇĞ»»¼Ä´æÆ÷1
-sfr CLK_DIV     =   0x97;   //0000,0000 Ê±ÖÓ·ÖÆµ¿ØÖÆ¼Ä´æÆ÷
-sfr BUS_SPEED   =   0xA1;   //xx10,x011 ×ÜÏßËÙ¶È¿ØÖÆ¼Ä´æÆ÷
-sfr P1ASF       =   0x9D;   //0000,0000 ¶Ë¿Ú1Ä£Äâ¹¦ÄÜÅäÖÃ¼Ä´æÆ÷
-sfr P_SW2       =   0xBA;   //0xxx,x000 ÍâÉè¶Ë¿ÚÇĞ»»¼Ä´æÆ÷
+//ç³»ç»Ÿç®¡ç†ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr PCON        =   0x87;   //0001,0000 ç”µæºæ§åˆ¶å¯„å­˜å™¨
+sfr AUXR        =   0x8E;   //0000,0000 è¾…åŠ©å¯„å­˜å™¨
+sfr AUXR1       =   0xA2;   //0000,0000 è¾…åŠ©å¯„å­˜å™¨1
+sfr P_SW1       =   0xA2;   //0000,0000 å¤–è®¾ç«¯å£åˆ‡æ¢å¯„å­˜å™¨1
+sfr CLK_DIV     =   0x97;   //0000,0000 æ—¶é’Ÿåˆ†é¢‘æ§åˆ¶å¯„å­˜å™¨
+sfr BUS_SPEED   =   0xA1;   //xx10,x011 æ€»çº¿é€Ÿåº¦æ§åˆ¶å¯„å­˜å™¨
+sfr P1ASF       =   0x9D;   //0000,0000 ç«¯å£1æ¨¡æ‹ŸåŠŸèƒ½é…ç½®å¯„å­˜å™¨
+sfr P_SW2       =   0xBA;   //0xxx,x000 å¤–è®¾ç«¯å£åˆ‡æ¢å¯„å­˜å™¨
 
-//ÖĞ¶ÏÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr IE          =   0xA8;   //0000,0000 ÖĞ¶Ï¿ØÖÆ¼Ä´æÆ÷
+//ä¸­æ–­ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr IE          =   0xA8;   //0000,0000 ä¸­æ–­æ§åˆ¶å¯„å­˜å™¨
 sbit EA         =   IE^7;
 sbit ELVD       =   IE^6;
 sbit EADC       =   IE^5;
@@ -137,7 +106,7 @@ sbit ET1        =   IE^3;
 sbit EX1        =   IE^2;
 sbit ET0        =   IE^1;
 sbit EX0        =   IE^0;
-sfr IP          =   0xB8;   //0000,0000 ÖĞ¶ÏÓÅÏÈ¼¶¼Ä´æÆ÷
+sfr IP          =   0xB8;   //0000,0000 ä¸­æ–­ä¼˜å…ˆçº§å¯„å­˜å™¨
 sbit PPCA       =   IP^7;
 sbit PLVD       =   IP^6;
 sbit PADC       =   IP^5;
@@ -146,12 +115,12 @@ sbit PT1        =   IP^3;
 sbit PX1        =   IP^2;
 sbit PT0        =   IP^1;
 sbit PX0        =   IP^0;
-sfr IE2         =   0xAF;   //0000,0000 ÖĞ¶Ï¿ØÖÆ¼Ä´æÆ÷2
-sfr IP2         =   0xB5;   //xxxx,xx00 ÖĞ¶ÏÓÅÏÈ¼¶¼Ä´æÆ÷2
-sfr INT_CLKO    =   0x8F;   //0000,0000 Íâ²¿ÖĞ¶ÏÓëÊ±ÖÓÊä³ö¿ØÖÆ¼Ä´æÆ÷
+sfr IE2         =   0xAF;   //0000,0000 ä¸­æ–­æ§åˆ¶å¯„å­˜å™¨2
+sfr IP2         =   0xB5;   //xxxx,xx00 ä¸­æ–­ä¼˜å…ˆçº§å¯„å­˜å™¨2
+sfr INT_CLKO    =   0x8F;   //0000,0000 å¤–éƒ¨ä¸­æ–­ä¸æ—¶é’Ÿè¾“å‡ºæ§åˆ¶å¯„å­˜å™¨
 
-//¶¨Ê±Æ÷ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr TCON        =   0x88;   //0000,0000 T0/T1¿ØÖÆ¼Ä´æÆ÷
+//å®šæ—¶å™¨ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr TCON        =   0x88;   //0000,0000 T0/T1æ§åˆ¶å¯„å­˜å™¨
 sbit TF1        =   TCON^7;
 sbit TR1        =   TCON^6;
 sbit TF0        =   TCON^5;
@@ -160,25 +129,25 @@ sbit IE1        =   TCON^3;
 sbit IT1        =   TCON^2;
 sbit IE0        =   TCON^1;
 sbit IT0        =   TCON^0;
-sfr TMOD        =   0x89;   //0000,0000 T0/T1Ä£Ê½¼Ä´æÆ÷
-sfr TL0         =   0x8A;   //0000,0000 T0µÍ×Ö½Ú
-sfr TL1         =   0x8B;   //0000,0000 T1µÍ×Ö½Ú
-sfr TH0         =   0x8C;   //0000,0000 T0¸ß×Ö½Ú
-sfr TH1         =   0x8D;   //0000,0000 T1¸ß×Ö½Ú
-sfr T4T3M       =   0xD1;   //0000,0000 T3/T4Ä£Ê½¼Ä´æÆ÷
-sfr T3T4M       =   0xD1;   //0000,0000 T3/T4Ä£Ê½¼Ä´æÆ÷
-sfr T4H         =   0xD2;   //0000,0000 T4¸ß×Ö½Ú
-sfr T4L         =   0xD3;   //0000,0000 T4µÍ×Ö½Ú
-sfr T3H         =   0xD4;   //0000,0000 T3¸ß×Ö½Ú
-sfr T3L         =   0xD5;   //0000,0000 T3µÍ×Ö½Ú
-sfr T2H         =   0xD6;   //0000,0000 T2¸ß×Ö½Ú
-sfr T2L         =   0xD7;   //0000,0000 T2µÍ×Ö½Ú
-sfr WKTCL       =   0xAA;   //0000,0000 µôµç»½ĞÑ¶¨Ê±Æ÷µÍ×Ö½Ú
-sfr WKTCH       =   0xAB;   //0000,0000 µôµç»½ĞÑ¶¨Ê±Æ÷¸ß×Ö½Ú
-sfr WDT_CONTR   =   0xC1;   //0000,0000 ¿´ÃÅ¹·¿ØÖÆ¼Ä´æÆ÷
+sfr TMOD        =   0x89;   //0000,0000 T0/T1æ¨¡å¼å¯„å­˜å™¨
+sfr TL0         =   0x8A;   //0000,0000 T0ä½å­—èŠ‚
+sfr TL1         =   0x8B;   //0000,0000 T1ä½å­—èŠ‚
+sfr TH0         =   0x8C;   //0000,0000 T0é«˜å­—èŠ‚
+sfr TH1         =   0x8D;   //0000,0000 T1é«˜å­—èŠ‚
+sfr T4T3M       =   0xD1;   //0000,0000 T3/T4æ¨¡å¼å¯„å­˜å™¨
+sfr T3T4M       =   0xD1;   //0000,0000 T3/T4æ¨¡å¼å¯„å­˜å™¨
+sfr T4H         =   0xD2;   //0000,0000 T4é«˜å­—èŠ‚
+sfr T4L         =   0xD3;   //0000,0000 T4ä½å­—èŠ‚
+sfr T3H         =   0xD4;   //0000,0000 T3é«˜å­—èŠ‚
+sfr T3L         =   0xD5;   //0000,0000 T3ä½å­—èŠ‚
+sfr T2H         =   0xD6;   //0000,0000 T2é«˜å­—èŠ‚
+sfr T2L         =   0xD7;   //0000,0000 T2ä½å­—èŠ‚
+sfr WKTCL       =   0xAA;   //0000,0000 æ‰ç”µå”¤é†’å®šæ—¶å™¨ä½å­—èŠ‚
+sfr WKTCH       =   0xAB;   //0000,0000 æ‰ç”µå”¤é†’å®šæ—¶å™¨é«˜å­—èŠ‚
+sfr WDT_CONTR   =   0xC1;   //0000,0000 çœ‹é—¨ç‹—æ§åˆ¶å¯„å­˜å™¨
 
-//´®ĞĞ¿ÚÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr SCON        =   0x98;   //0000,0000 ´®¿Ú1¿ØÖÆ¼Ä´æÆ÷
+//ä¸²è¡Œå£ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr SCON        =   0x98;   //0000,0000 ä¸²å£1æ§åˆ¶å¯„å­˜å™¨
 sbit SM0        =   SCON^7;
 sbit SM1        =   SCON^6;
 sbit SM2        =   SCON^5;
@@ -187,117 +156,60 @@ sbit TB8        =   SCON^3;
 sbit RB8        =   SCON^2;
 sbit TI         =   SCON^1;
 sbit RI         =   SCON^0;
-sfr SBUF        =   0x99;   //xxxx,xxxx ´®¿Ú1Êı¾İ¼Ä´æÆ÷
-sfr S2CON       =   0x9A;   //0000,0000 ´®¿Ú2¿ØÖÆ¼Ä´æÆ÷
-sfr S2BUF       =   0x9B;   //xxxx,xxxx ´®¿Ú2Êı¾İ¼Ä´æÆ÷
-sfr S3CON       =   0xAC;   //0000,0000 ´®¿Ú3¿ØÖÆ¼Ä´æÆ÷
-sfr S3BUF       =   0xAD;   //xxxx,xxxx ´®¿Ú3Êı¾İ¼Ä´æÆ÷
-sfr S4CON       =   0x84;   //0000,0000 ´®¿Ú4¿ØÖÆ¼Ä´æÆ÷
-sfr S4BUF       =   0x85;   //xxxx,xxxx ´®¿Ú4Êı¾İ¼Ä´æÆ÷
-sfr SADDR       =   0xA9;   //0000,0000 ´Ó»úµØÖ·¼Ä´æÆ÷
-sfr SADEN       =   0xB9;   //0000,0000 ´Ó»úµØÖ·ÆÁ±Î¼Ä´æÆ÷
+sfr SBUF        =   0x99;   //xxxx,xxxx ä¸²å£1æ•°æ®å¯„å­˜å™¨
+sfr S2CON       =   0x9A;   //0000,0000 ä¸²å£2æ§åˆ¶å¯„å­˜å™¨
+sfr S2BUF       =   0x9B;   //xxxx,xxxx ä¸²å£2æ•°æ®å¯„å­˜å™¨
+sfr S3CON       =   0xAC;   //0000,0000 ä¸²å£3æ§åˆ¶å¯„å­˜å™¨
+sfr S3BUF       =   0xAD;   //xxxx,xxxx ä¸²å£3æ•°æ®å¯„å­˜å™¨
+sfr S4CON       =   0x84;   //0000,0000 ä¸²å£4æ§åˆ¶å¯„å­˜å™¨
+sfr S4BUF       =   0x85;   //xxxx,xxxx ä¸²å£4æ•°æ®å¯„å­˜å™¨
+sfr SADDR       =   0xA9;   //0000,0000 ä»æœºåœ°å€å¯„å­˜å™¨
+sfr SADEN       =   0xB9;   //0000,0000 ä»æœºåœ°å€å±è”½å¯„å­˜å™¨
 
-//ADC ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr ADC_CONTR   =   0xBC;   //0000,0000 A/D×ª»»¿ØÖÆ¼Ä´æÆ÷
-sfr ADC_RES     =   0xBD;   //0000,0000 A/D×ª»»½á¹û¸ß8Î»
-sfr ADC_RESL    =   0xBE;   //0000,0000 A/D×ª»»½á¹ûµÍ2Î»
+//ADC ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr ADC_CONTR   =   0xBC;   //0000,0000 A/Dè½¬æ¢æ§åˆ¶å¯„å­˜å™¨
+sfr ADC_RES     =   0xBD;   //0000,0000 A/Dè½¬æ¢ç»“æœé«˜8ä½
+sfr ADC_RESL    =   0xBE;   //0000,0000 A/Dè½¬æ¢ç»“æœä½2ä½
 
-//SPI ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr SPSTAT      =   0xCD;   //00xx,xxxx SPI×´Ì¬¼Ä´æÆ÷
-sfr SPCTL       =   0xCE;   //0000,0100 SPI¿ØÖÆ¼Ä´æÆ÷
-sfr SPDAT       =   0xCF;   //0000,0000 SPIÊı¾İ¼Ä´æÆ÷
+//SPI ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr SPSTAT      =   0xCD;   //00xx,xxxx SPIçŠ¶æ€å¯„å­˜å™¨
+sfr SPCTL       =   0xCE;   //0000,0100 SPIæ§åˆ¶å¯„å­˜å™¨
+sfr SPDAT       =   0xCF;   //0000,0000 SPIæ•°æ®å¯„å­˜å™¨
 
-//IAP/ISP ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr IAP_DATA    =   0xC2;   //0000,0000 EEPROMÊı¾İ¼Ä´æÆ÷
-sfr IAP_ADDRH   =   0xC3;   //0000,0000 EEPROMµØÖ·¸ß×Ö½Ú
-sfr IAP_ADDRL   =   0xC4;   //0000,0000 EEPROMµØÖ·µÚ×Ö½Ú
-sfr IAP_CMD     =   0xC5;   //xxxx,xx00 EEPROMÃüÁî¼Ä´æÆ÷
-sfr IAP_TRIG    =   0xC6;   //0000,0000 EEPRPMÃüÁî´¥·¢¼Ä´æÆ÷
-sfr IAP_CONTR   =   0xC7;   //0000,x000 EEPROM¿ØÖÆ¼Ä´æÆ÷
+//IAP/ISP ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr IAP_DATA    =   0xC2;   //0000,0000 EEPROMæ•°æ®å¯„å­˜å™¨
+sfr IAP_ADDRH   =   0xC3;   //0000,0000 EEPROMåœ°å€é«˜å­—èŠ‚
+sfr IAP_ADDRL   =   0xC4;   //0000,0000 EEPROMåœ°å€ç¬¬å­—èŠ‚
+sfr IAP_CMD     =   0xC5;   //xxxx,xx00 EEPROMå‘½ä»¤å¯„å­˜å™¨
+sfr IAP_TRIG    =   0xC6;   //0000,0000 EEPRPMå‘½ä»¤è§¦å‘å¯„å­˜å™¨
+sfr IAP_CONTR   =   0xC7;   //0000,x000 EEPROMæ§åˆ¶å¯„å­˜å™¨
 
-//PCA/PWM ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr CCON        =   0xD8;   //00xx,xx00 PCA¿ØÖÆ¼Ä´æÆ÷
+//PCA/PWM ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr CCON        =   0xD8;   //00xx,xx00 PCAæ§åˆ¶å¯„å­˜å™¨
 sbit CF         =   CCON^7;
 sbit CR         =   CCON^6;
 sbit CCF2       =   CCON^2;
 sbit CCF1       =   CCON^1;
 sbit CCF0       =   CCON^0;
-sfr CMOD        =   0xD9;   //0xxx,x000 PCA ¹¤×÷Ä£Ê½¼Ä´æÆ÷
-sfr CL          =   0xE9;   //0000,0000 PCA¼ÆÊıÆ÷µÍ×Ö½Ú
-sfr CH          =   0xF9;   //0000,0000 PCA¼ÆÊıÆ÷¸ß×Ö½Ú
-sfr CCAPM0      =   0xDA;   //0000,0000 PCAÄ£¿é0µÄPWM¼Ä´æÆ÷
-sfr CCAPM1      =   0xDB;   //0000,0000 PCAÄ£¿é1µÄPWM¼Ä´æÆ÷
-sfr CCAPM2      =   0xDC;   //0000,0000 PCAÄ£¿é2µÄPWM ¼Ä´æÆ÷
-sfr CCAP0L      =   0xEA;   //0000,0000 PCAÄ£¿é0µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ×Ö½Ú
-sfr CCAP1L      =   0xEB;   //0000,0000 PCAÄ£¿é1µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ×Ö½Ú
-sfr CCAP2L      =   0xEC;   //0000,0000 PCAÄ£¿é2µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ×Ö½Ú
-sfr PCA_PWM0    =   0xF2;   //xxxx,xx00 PCAÄ£¿é0µÄPWM¼Ä´æÆ÷
-sfr PCA_PWM1    =   0xF3;   //xxxx,xx00 PCAÄ£¿é1µÄPWM¼Ä´æÆ÷
-sfr PCA_PWM2    =   0xF4;   //xxxx,xx00 PCAÄ£¿é1µÄPWM¼Ä´æÆ÷
-sfr CCAP0H      =   0xFA;   //0000,0000 PCAÄ£¿é0µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß×Ö½Ú
-sfr CCAP1H      =   0xFB;   //0000,0000 PCAÄ£¿é1µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß×Ö½Ú
-sfr CCAP2H      =   0xFC;   //0000,0000 PCAÄ£¿é2µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß×Ö½Ú
+sfr CMOD        =   0xD9;   //0xxx,x000 PCA å·¥ä½œæ¨¡å¼å¯„å­˜å™¨
+sfr CL          =   0xE9;   //0000,0000 PCAè®¡æ•°å™¨ä½å­—èŠ‚
+sfr CH          =   0xF9;   //0000,0000 PCAè®¡æ•°å™¨é«˜å­—èŠ‚
+sfr CCAPM0      =   0xDA;   //0000,0000 PCAæ¨¡å—0çš„PWMå¯„å­˜å™¨
+sfr CCAPM1      =   0xDB;   //0000,0000 PCAæ¨¡å—1çš„PWMå¯„å­˜å™¨
+sfr CCAPM2      =   0xDC;   //0000,0000 PCAæ¨¡å—2çš„PWM å¯„å­˜å™¨
+sfr CCAP0L      =   0xEA;   //0000,0000 PCAæ¨¡å—0çš„æ•æ‰/æ¯”è¾ƒå¯„å­˜å™¨ä½å­—èŠ‚
+sfr CCAP1L      =   0xEB;   //0000,0000 PCAæ¨¡å—1çš„æ•æ‰/æ¯”è¾ƒå¯„å­˜å™¨ä½å­—èŠ‚
+sfr CCAP2L      =   0xEC;   //0000,0000 PCAæ¨¡å—2çš„æ•æ‰/æ¯”è¾ƒå¯„å­˜å™¨ä½å­—èŠ‚
+sfr PCA_PWM0    =   0xF2;   //xxxx,xx00 PCAæ¨¡å—0çš„PWMå¯„å­˜å™¨
+sfr PCA_PWM1    =   0xF3;   //xxxx,xx00 PCAæ¨¡å—1çš„PWMå¯„å­˜å™¨
+sfr PCA_PWM2    =   0xF4;   //xxxx,xx00 PCAæ¨¡å—1çš„PWMå¯„å­˜å™¨
+sfr CCAP0H      =   0xFA;   //0000,0000 PCAæ¨¡å—0çš„æ•æ‰/æ¯”è¾ƒå¯„å­˜å™¨é«˜å­—èŠ‚
+sfr CCAP1H      =   0xFB;   //0000,0000 PCAæ¨¡å—1çš„æ•æ‰/æ¯”è¾ƒå¯„å­˜å™¨é«˜å­—èŠ‚
+sfr CCAP2H      =   0xFC;   //0000,0000 PCAæ¨¡å—2çš„æ•æ‰/æ¯”è¾ƒå¯„å­˜å™¨é«˜å­—èŠ‚
 
-//±È½ÏÆ÷ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr CMPCR1      =   0xE6;   //0000,0000 ±È½ÏÆ÷¿ØÖÆ¼Ä´æÆ÷1
-sfr CMPCR2      =   0xE7;   //0000,0000 ±È½ÏÆ÷¿ØÖÆ¼Ä´æÆ÷2
-
-//ÔöÇ¿ĞÍPWM²¨ĞÎ·¢ÉúÆ÷ÌØÊâ¹¦ÄÜ¼Ä´æÆ÷
-sfr PWMCFG      =   0xf1;   //x000,0000 PWMÅäÖÃ¼Ä´æÆ÷
-sfr PWMCR       =   0xf5;   //0000,0000 PWM¿ØÖÆ¼Ä´æÆ÷
-sfr PWMIF       =   0xf6;   //x000,0000 PWMÖĞ¶Ï±êÖ¾¼Ä´æÆ÷
-sfr PWMFDCR     =   0xf7;   //xx00,0000 PWMÍâ²¿Òì³£¼ì²â¿ØÖÆ¼Ä´æÆ÷
-
-//ÈçÏÂÌØÊâ¹¦ÄÜ¼Ä´æÆ÷Î»ÓÚÀ©Õ¹RAMÇøÓò
-//·ÃÎÊÕâĞ©¼Ä´æÆ÷,ĞèÏÈ½«P_SW2µÄBIT7ÉèÖÃÎª1,²Å¿ÉÕı³£¶ÁĞ´
-#define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
-#define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
-#define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
-#define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
-#define PWM2T1      (*(unsigned int  volatile xdata *)0xff00)
-#define PWM2T1H     (*(unsigned char volatile xdata *)0xff00)
-#define PWM2T1L     (*(unsigned char volatile xdata *)0xff01)
-#define PWM2T2      (*(unsigned int  volatile xdata *)0xff02)
-#define PWM2T2H     (*(unsigned char volatile xdata *)0xff02)
-#define PWM2T2L     (*(unsigned char volatile xdata *)0xff03)
-#define PWM2CR      (*(unsigned char volatile xdata *)0xff04)
-#define PWM3T1      (*(unsigned int  volatile xdata *)0xff10)
-#define PWM3T1H     (*(unsigned char volatile xdata *)0xff10)
-#define PWM3T1L     (*(unsigned char volatile xdata *)0xff11)
-#define PWM3T2      (*(unsigned int  volatile xdata *)0xff12)
-#define PWM3T2H     (*(unsigned char volatile xdata *)0xff12)
-#define PWM3T2L     (*(unsigned char volatile xdata *)0xff13)
-#define PWM3CR      (*(unsigned char volatile xdata *)0xff14)
-#define PWM4T1      (*(unsigned int  volatile xdata *)0xff20)
-#define PWM4T1H     (*(unsigned char volatile xdata *)0xff20)
-#define PWM4T1L     (*(unsigned char volatile xdata *)0xff21)
-#define PWM4T2      (*(unsigned int  volatile xdata *)0xff22)
-#define PWM4T2H     (*(unsigned char volatile xdata *)0xff22)
-#define PWM4T2L     (*(unsigned char volatile xdata *)0xff23)
-#define PWM4CR      (*(unsigned char volatile xdata *)0xff24)
-#define PWM5T1      (*(unsigned int  volatile xdata *)0xff30)
-#define PWM5T1H     (*(unsigned char volatile xdata *)0xff30)
-#define PWM5T1L     (*(unsigned char volatile xdata *)0xff31)
-#define PWM5T2      (*(unsigned int  volatile xdata *)0xff32)
-#define PWM5T2H     (*(unsigned char volatile xdata *)0xff32)
-#define PWM5T2L     (*(unsigned char volatile xdata *)0xff33)
-#define PWM5CR      (*(unsigned char volatile xdata *)0xff34)
-#define PWM6T1      (*(unsigned int  volatile xdata *)0xff40)
-#define PWM6T1H     (*(unsigned char volatile xdata *)0xff40)
-#define PWM6T1L     (*(unsigned char volatile xdata *)0xff41)
-#define PWM6T2      (*(unsigned int  volatile xdata *)0xff42)
-#define PWM6T2H     (*(unsigned char volatile xdata *)0xff42)
-#define PWM6T2L     (*(unsigned char volatile xdata *)0xff43)
-#define PWM6CR      (*(unsigned char volatile xdata *)0xff44)
-#define PWM7T1      (*(unsigned int  volatile xdata *)0xff50)        
-#define PWM7T1H     (*(unsigned char volatile xdata *)0xff50)        
-#define PWM7T1L     (*(unsigned char volatile xdata *)0xff51)
-#define PWM7T2      (*(unsigned int  volatile xdata *)0xff52)
-#define PWM7T2H     (*(unsigned char volatile xdata *)0xff52)
-#define PWM7T2L     (*(unsigned char volatile xdata *)0xff53)
-#define PWM7CR      (*(unsigned char volatile xdata *)0xff54)
-
-/////////////////////////////////////////////////
+//æ¯”è¾ƒå™¨ç‰¹æ®ŠåŠŸèƒ½å¯„å­˜å™¨
+sfr CMPCR1      =   0xE6;   //0000,0000 æ¯”è¾ƒå™¨æ§åˆ¶å¯„å­˜å™¨1
+sfr CMPCR2      =   0xE7;   //0000,0000 æ¯”è¾ƒå™¨æ§åˆ¶å¯„å­˜å™¨2
 
 #endif
 
