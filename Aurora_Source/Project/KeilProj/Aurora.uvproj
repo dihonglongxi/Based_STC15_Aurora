@@ -7,18 +7,18 @@
 
   <Targets>
     <Target>
-      <TargetName>BP-A1-CP_A</TargetName>
+      <TargetName>Aurora</TargetName>
       <ToolsetNumber>0x0</ToolsetNumber>
       <ToolsetName>MCS-51</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STC15W408AS</Device>
+          <Device>STC15F2K60S2</Device>
           <Vendor>STC</Vendor>
-          <Cpu>IRAM(0-0xFF) XRAM(0-0xFF) IROM(0-0x1FF8) CLOCK(35000000) MODP2</Cpu>
+          <Cpu>IRAM(0-0xFF) XRAM(0-0x6FF) IROM(0-0xEFF8) CLOCK(35000000) MODP2</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile>"LIB\STARTUP.A51" ("Standard 8051 Startup Code")</StartupFile>
           <FlashDriverDll></FlashDriverDll>
-          <DeviceId>62744</DeviceId>
+          <DeviceId>62472</DeviceId>
           <RegisterFile>STC15F2K60S2.H</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -45,7 +45,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>..\ProjOut\</OutputDirectory>
-          <OutputName>BP-A1-CP_A</OutputName>
+          <OutputName>Aurora</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -270,7 +270,7 @@
               <IRO>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x1ff9</Size>
+                <Size>0xeff9</Size>
               </IRO>
               <IRA>
                 <Type>0</Type>
@@ -280,7 +280,7 @@
               <XRA>
                 <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x100</Size>
+                <Size>0x700</Size>
               </XRA>
               <XRA512>
                 <Type>0</Type>
@@ -374,11 +374,6 @@
               <FilePath>..\ProgSource\adc.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ProgSource\main.c</FilePath>
-            </File>
-            <File>
               <FileName>pca.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ProgSource\pca.c</FilePath>
@@ -393,6 +388,16 @@
               <FileType>1</FileType>
               <FilePath>..\ProgSource\usart.c</FilePath>
             </File>
+            <File>
+              <FileName>Aurora.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ProgSource\Aurora.c</FilePath>
+            </File>
+            <File>
+              <FileName>Aurora_Base_Config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ProgSource\Aurora_Base_Config.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -402,11 +407,6 @@
               <FileName>adc.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\ProgInc\adc.h</FilePath>
-            </File>
-            <File>
-              <FileName>config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\ProgInc\config.h</FilePath>
             </File>
             <File>
               <FileName>it.h</FileName>
@@ -419,11 +419,6 @@
               <FilePath>..\ProgInc\pca.h</FilePath>
             </File>
             <File>
-              <FileName>STC15W408AS.H</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\ProgInc\STC15W408AS.H</FilePath>
-            </File>
-            <File>
               <FileName>tim.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\ProgInc\tim.h</FilePath>
@@ -432,6 +427,16 @@
               <FileName>usart.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\ProgInc\usart.h</FilePath>
+            </File>
+            <File>
+              <FileName>STC15F2K60S2.H</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\ProgInc\STC15F2K60S2.H</FilePath>
+            </File>
+            <File>
+              <FileName>Aurora_Base_Config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\ProgInc\Aurora_Base_Config.h</FilePath>
             </File>
           </Files>
         </Group>

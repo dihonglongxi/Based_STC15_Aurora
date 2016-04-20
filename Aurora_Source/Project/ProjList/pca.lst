@@ -1,0 +1,301 @@
+C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE PCA
+OBJECT MODULE PLACED IN ..\ProjOut\pca.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\pca.c LARGE ROM(COMPACT) OPTIMIZE(8,SPEED) PRIN
+                    -T(..\ProjList\pca.lst) OBJECT(..\ProjOut\pca.obj)
+
+line level    source
+
+   1          /******************************************************************************
+   2            Copyright (C), 2015-2016,  Bpeer Robotics. Co., Ltd.
+   3            
+   4            File name: pca.c
+   5          
+   6            Author: 郭世全    Version: v0.10.0    Date: 2016.02.19 
+   7          
+   8            Description:      PCA的相关操作函数
+   9          
+  10            Others:         
+  11          
+  12            Function List:  
+  13              1.void PCA_Init(void)       PCA模块通用设置初始化
+  14              2.void T38KHZ_Start(void)   38KHZ基波输出函数
+  15              3.void T38KHZ_Stop(void)    38KHZ基波停止函数
+  16              4.void T32HZ_Start(void)    32HZ安全引脚方波输出函数
+  17              5.void T32HZ_Stop(void)     32HZ安全引脚方波停止函数
+  18          
+  19            History:        
+  20          
+  21              1. Date: 2016.02.19
+  22                 Author: 郭世全
+  23                 Modification: Create File and Frame   
+  24          ******************************************************************************/
+  25          
+  26          #include "..\ProgInc\pca.h"
+*** WARNING C318 IN LINE 24 OF ..\ProgInc\pca.h: can't open file '..\ProgInc\config.h'
+  27          
+  28          /******************************************************************************
+  29          
+  30            Function:       void PCA_Init(void)
+  31          
+  32            Description:    初始化PCA模块的通用设置。
+  33          
+  34            Calls:          1、void main(void);
+  35          
+  36            Called By:      None
+  37          
+  38            Input:          None
+  39          
+  40            Output:         None
+  41          
+  42            Return:         None
+  43          
+  44            Others:         None
+  45          
+  46            Version:        V0.10.0,2016-02-05
+  47          
+  48          ******************************************************************************/
+  49          
+  50          void PCA_Init(void)
+  51          {
+  52   1           /*初始化CCON：PCA定时器停止，清除CF标志，清除模块中断标志*/ 
+  53   1           CCON = 0;
+C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 2   
+
+*** ERROR C202 IN LINE 53 OF ..\ProgSource\pca.c: 'CCON': undefined identifier
+  54   1      
+  55   1           /*初始化PCA计数器*/ 
+  56   1           CH = 0;
+*** ERROR C202 IN LINE 56 OF ..\ProgSource\pca.c: 'CH': undefined identifier
+  57   1           CL = 0;
+*** ERROR C202 IN LINE 57 OF ..\ProgSource\pca.c: 'CL': undefined identifier
+  58   1      
+  59   1           /*PWM管脚定义方式2：P3.4/ECI_2, P3.5/CCP0_2, P3.6/CCP1_2, P3.7/CCP2_2*/ 
+  60   1           AUXR1 = (AUXR1 & ~(3<<4)) | (1<<4);           
+*** ERROR C202 IN LINE 60 OF ..\ProgSource\pca.c: 'AUXR1': undefined identifier
+  61   1      
+  62   1           /*设置PCA时钟源为SYSclk/8*/
+  63   1           CMOD  = (CMOD  & ~(7<<1)) | (7<<1);   
+*** ERROR C202 IN LINE 63 OF ..\ProgSource\pca.c: 'CMOD': undefined identifier
+  64   1      
+  65   1           /*关闭PCA中端（ECF）*/
+  66   1           CMOD  = CMOD  & ~1;  
+*** ERROR C202 IN LINE 66 OF ..\ProgSource\pca.c: 'CMOD': undefined identifier
+  67   1      
+  68   1           /*设置PCA中断为低优先级*/
+  69   1           PPCA = 1;  
+*** ERROR C202 IN LINE 69 OF ..\ProgSource\pca.c: 'PPCA': undefined identifier
+  70   1      
+  71   1           /*默认所有的模块都关闭*/
+  72   1           CCAPM0 = 0x00;     
+*** ERROR C202 IN LINE 72 OF ..\ProgSource\pca.c: 'CCAPM0': undefined identifier
+  73   1           CCAPM1 = 0x00;
+*** ERROR C202 IN LINE 73 OF ..\ProgSource\pca.c: 'CCAPM1': undefined identifier
+  74   1           CCAPM2 = 0x00;
+*** ERROR C202 IN LINE 74 OF ..\ProgSource\pca.c: 'CCAPM2': undefined identifier
+  75   1      }
+  76          
+  77          /******************************************************************************
+  78          
+  79            Function:       void T38KHZ_Start(void)
+  80          
+  81            Description:    提供38KHZ 50% 基础PWM，先停止，后打开。
+  82          
+  83            Calls:          1、void main(void);
+  84          
+  85            Called By:      None
+  86          
+  87            Input:          None
+  88          
+  89            Output:         None
+  90          
+  91            Return:         None
+  92          
+  93            Others:         None
+  94          
+  95            Version:        V0.10.0,2016-02-06
+  96          
+  97          ******************************************************************************/
+  98          
+  99          void T38KHZ_Start(void)
+ 100          {
+ 101   1           /*初始化CCON：PCA定时器停止，清除CF标志，清除模块中断标志*/ 
+ 102   1           CCON = 0;
+*** ERROR C202 IN LINE 102 OF ..\ProgSource\pca.c: 'CCON': undefined identifier
+ 103   1      
+ 104   1           /*初始化PCA计数器*/ 
+C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 3   
+
+ 105   1           CH = 0;
+*** ERROR C202 IN LINE 105 OF ..\ProgSource\pca.c: 'CH': undefined identifier
+ 106   1           CL = 0;
+*** ERROR C202 IN LINE 106 OF ..\ProgSource\pca.c: 'CL': undefined identifier
+ 107   1      
+ 108   1           /*设置模块0为高速脉冲输出模式，并设置输出38KHZ方波*/
+ 109   1           CCAPM0 = 0x4d;
+*** ERROR C202 IN LINE 109 OF ..\ProgSource\pca.c: 'CCAPM0': undefined identifier
+ 110   1      
+ 111   1           CCAP0L = PCA0_value;
+*** ERROR C202 IN LINE 111 OF ..\ProgSource\pca.c: 'CCAP0L': undefined identifier
+ 112   1           CCAP0H = PCA0_value >> 8;
+*** ERROR C202 IN LINE 112 OF ..\ProgSource\pca.c: 'CCAP0H': undefined identifier
+ 113   1      
+ 114   1           PCA0_value += T38KHz;
+*** ERROR C202 IN LINE 114 OF ..\ProgSource\pca.c: 'T38KHz': undefined identifier
+ 115   1      
+ 116   1           /*PCA模块开始计数*/
+ 117   1           CR = 1;
+*** ERROR C202 IN LINE 117 OF ..\ProgSource\pca.c: 'CR': undefined identifier
+ 118   1      }
+ 119          
+ 120          /******************************************************************************
+ 121          
+ 122            Function:       void T38KHZ_Stop(void)
+ 123          
+ 124            Description:    停止提供38KHZ 50% 基础PWM
+ 125          
+ 126            Calls:          1、void main(void);
+ 127          
+ 128            Called By:      None
+ 129          
+ 130            Input:          None
+ 131          
+ 132            Output:         None
+ 133          
+ 134            Return:         None
+ 135          
+ 136            Others:         None
+ 137          
+ 138            Version:        V0.10.0,2016-02-06
+ 139          
+ 140          ******************************************************************************/
+ 141          
+ 142          void T38KHZ_Stop(void)
+ 143          {
+ 144   1      //     /*初始化CCON：PCA定时器停止，清除CF标志，清除模块中断标志*/ 
+ 145   1      //     CCON = 0;
+ 146   1      
+ 147   1      //     /*初始化PCA计数器*/ 
+ 148   1      //     CH = 0;
+ 149   1      //     CL = 0;
+ 150   1      
+ 151   1           /*关闭模块0*/
+ 152   1           CCAPM0 = 0x00;
+*** ERROR C202 IN LINE 152 OF ..\ProgSource\pca.c: 'CCAPM0': undefined identifier
+ 153   1      
+ 154   1           CCAP0L = 0x00;
+*** ERROR C202 IN LINE 154 OF ..\ProgSource\pca.c: 'CCAP0L': undefined identifier
+ 155   1           CCAP0H = 0x00;
+*** ERROR C202 IN LINE 155 OF ..\ProgSource\pca.c: 'CCAP0H': undefined identifier
+ 156   1          
+C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 4   
+
+ 157   1           /*设置管脚输出为底电平*/
+ 158   1           P3 &= 0xDF;
+*** ERROR C202 IN LINE 158 OF ..\ProgSource\pca.c: 'P3': undefined identifier
+ 159   1      }
+ 160          
+ 161          /******************************************************************************
+ 162          
+ 163            Function:       void T32HZ_Start(void)
+ 164          
+ 165            Description:    提供32HZ 50% 方波，先停止，后打开。
+ 166          
+ 167            Calls:          1、void main(void);
+ 168          
+ 169            Called By:      // 调用本函数的函数清单
+ 170          
+ 171            Input:          None
+ 172          
+ 173            Output:         None
+ 174          
+ 175            Return:         None
+ 176          
+ 177            Others:         None
+ 178          
+ 179            Version:        V0.10.0,2016-02-06
+ 180          
+ 181          ******************************************************************************/
+ 182          
+ 183          void T32HZ_Start(void)
+ 184          {
+ 185   1           /*初始化CCON：PCA定时器停止，清除CF标志，清除模块中断标志*/ 
+ 186   1           CCON = 0;
+*** ERROR C202 IN LINE 186 OF ..\ProgSource\pca.c: 'CCON': undefined identifier
+ 187   1      
+ 188   1           /*初始化PCA计数器*/ 
+ 189   1           CH = 0;
+*** ERROR C202 IN LINE 189 OF ..\ProgSource\pca.c: 'CH': undefined identifier
+ 190   1           CL = 0;
+*** ERROR C202 IN LINE 190 OF ..\ProgSource\pca.c: 'CL': undefined identifier
+ 191   1      
+ 192   1           /*设置模块1为高速脉冲输出模式，并设置输出32HZ方波*/
+ 193   1           CCAPM1 = 0x4d;
+*** ERROR C202 IN LINE 193 OF ..\ProgSource\pca.c: 'CCAPM1': undefined identifier
+ 194   1      
+ 195   1           CCAP1L = PCA1_value;
+*** ERROR C202 IN LINE 195 OF ..\ProgSource\pca.c: 'CCAP1L': undefined identifier
+ 196   1           CCAP1H = PCA1_value >> 8;
+*** ERROR C202 IN LINE 196 OF ..\ProgSource\pca.c: 'CCAP1H': undefined identifier
+ 197   1      
+ 198   1           PCA1_value += T32HZ;
+*** ERROR C202 IN LINE 198 OF ..\ProgSource\pca.c: 'T32HZ': undefined identifier
+ 199   1      
+ 200   1           /*PCA模块开始计数*/
+ 201   1           CR = 1;
+*** ERROR C202 IN LINE 201 OF ..\ProgSource\pca.c: 'CR': undefined identifier
+ 202   1      }
+ 203          
+ 204          /******************************************************************************
+ 205          
+ 206            Function:       void T32HZ_Stop(void)
+ 207          
+ 208            Description:    停止提供32HZ 50% 基础PWM
+ 209          
+C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 5   
+
+ 210            Calls:          1、void main(void);
+ 211          
+ 212            Called By:      None
+ 213          
+ 214            Input:          None
+ 215          
+ 216            Output:         None
+ 217          
+ 218            Return:         None
+ 219          
+ 220            Others:         None
+ 221          
+ 222            Version:        V0.10.0,2016-02-06
+ 223          
+ 224          ******************************************************************************/
+ 225          
+ 226          void T32HZ_Stop(void)
+ 227          {
+ 228   1           /*初始化CCON：PCA定时器停止，清除CF标志，清除模块中断标志*/ 
+ 229   1           CCON = 0;
+*** ERROR C202 IN LINE 229 OF ..\ProgSource\pca.c: 'CCON': undefined identifier
+ 230   1      
+ 231   1           /*初始化PCA计数器*/ 
+ 232   1           CH = 0;
+*** ERROR C202 IN LINE 232 OF ..\ProgSource\pca.c: 'CH': undefined identifier
+ 233   1           CL = 0;
+*** ERROR C202 IN LINE 233 OF ..\ProgSource\pca.c: 'CL': undefined identifier
+ 234   1      
+ 235   1           /*关闭模块0*/
+ 236   1           CCAPM1 = 0x00;
+*** ERROR C202 IN LINE 236 OF ..\ProgSource\pca.c: 'CCAPM1': undefined identifier
+ 237   1      
+ 238   1           CCAP1L = 0x00;
+*** ERROR C202 IN LINE 238 OF ..\ProgSource\pca.c: 'CCAP1L': undefined identifier
+ 239   1           CCAP1H = 0x00;
+*** ERROR C202 IN LINE 239 OF ..\ProgSource\pca.c: 'CCAP1H': undefined identifier
+ 240   1          
+ 241   1          /*设置管脚输出为底电平*/
+ 242   1           P3 &= 0xBF;
+*** ERROR C202 IN LINE 242 OF ..\ProgSource\pca.c: 'P3': undefined identifier
+ 243   1      }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  37 ERROR(S)

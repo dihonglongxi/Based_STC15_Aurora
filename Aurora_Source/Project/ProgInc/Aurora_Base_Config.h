@@ -1,69 +1,77 @@
 /******************************************************************************
-  Copyright (C), 2015-2016,  Bpeer Robotics. Co., Ltd.
+//************ <<< Use Configuration Wizard in Context Menu >>> ***************
+//ÓÃÓÚÒýµ¼Keil Configuration Wized Æô¶¯£¬ÇëÎðÉ¾³ý
+//ÎÄ¼þÐèÒª±£´æ³ÉANSI¸ñÊ½£¬·ñÔò¿ÉÄÜ»á²úÉúÂÒÂë
+
+  Copyright (C), 2013-2016,  DiHongLongXi£¨µÛø™ýˆêØ£©
   
   File name: config.h
 
-  Author: éƒ­ä¸–å…¨    Version: v0.10.0    Date: 2016.02.19 
+  Author: DHLX    Version: v0.10.0    Date: 2016.04.20
 
-  Description:     ç”¨äºŽé…ç½®IOå’Œç³»ç»Ÿå®å®šä¹‰
+  Description:     ÓÃÓÚÊä³öIOÅäÖÃºÍÆäËû¹¦ÄÜÅäÖÃËùÐèµÄºê¶¨Òå
 
   Others:         
 
   Function List:  
 
   History:        
-
-    1. Date: 2016.02.19
-       Author: éƒ­ä¸–å…¨
-       Modification: Create File and Frame    
+    
+  Num. |    Date    |  Author  |  Modification
+    1. | 2016.04.20 |   DHLX   |  ´´½¨ÎÄ¼þºÍÎÄ¼þ¿ò¼Ü   
 ******************************************************************************/
 
-// <<< Use Configuration Wizard in Context Menu >>> 
+
 
 #ifndef __config_H
 #define __config_H
 
-/*è°ƒç”¨STC15W408ASç³»åˆ—å•ç‰‡æœºåº•å±‚ç¡¬ä»¶å®šä¹‰æ–‡ä»¶*/
+//     <o.0>   PAGES: Page Size      <0=> 1M Byte    <1=> 4M Bytes
+//                 <i> Selects Active Bits in Base Address
+#define Hardware_Model 0
+
+
+/*µ÷ÓÃSTC15W408ASÏµÁÐµ¥Æ¬»úµ×²ãÓ²¼þ¶¨ÒåÎÄ¼þ*/
 #include "..\ProgInc\STC15W408AS.H"
 
-/*éžè°ƒè¯•æ¨¡å¼ä¸‹å¯ä»¥åˆ é™¤,ä¸ºäº†ä½¿ç”¨printf*/
+/*·Çµ÷ÊÔÄ£Ê½ÏÂ¿ÉÒÔÉ¾³ý,ÎªÁËÊ¹ÓÃprintf*/
 #include "stdio.h"
 #include "intrins.h"
 
-/*å®šä¹‰ä¸»æ—¶é’Ÿ, 33.1776MHz*/
-#define MAIN_Fosc       33177600L
+/*¶¨ÒåÖ÷Ê±ÖÓ, 33.1776MHz*/
+#define MAIN_Fosc       33185792L
 
-/*è½¯ä»¶å¤ä½ï¼Œè‡ªåŠ¨ä¸‹è½½ï¼Œç®¡è„šå®šä¹‰*/
+/*Èí¼þ¸´Î»£¬×Ô¶¯ÏÂÔØ£¬¹Ü½Å¶¨Òå*/
 sbit System_IAP_REST_PIN = P3^0;
 
-/*ä¿¡å·æŒ‡ç¤ºç¯ç®¡è„šå®šä¹‰*/
+/*ÐÅºÅÖ¸Ê¾µÆ¹Ü½Å¶¨Òå*/
 sbit Signal_LED_PIN = P3^7;
 
-/*æ£€æŸ¥ä¿¡å·(å¼€å…³ä¿¡å·)å¼•è„šå®šä¹‰*/
+/*¼ì²éÐÅºÅ(¿ª¹ØÐÅºÅ)Òý½Å¶¨Òå*/
 sbit Check_Signal_PIN = P3^4;
 
-/*å…¨å‘çº¢å¤–çš„ç®¡è„šå®šä¹‰*/
+/*È«ÏòºìÍâµÄ¹Ü½Å¶¨Òå*/
 sbit LED_FF_PIN = P1^2;
 
-/*å·¦ä¾§çº¢å¤–çš„ç®¡è„šå®šä¹‰*/
+/*×ó²àºìÍâµÄ¹Ü½Å¶¨Òå*/
 sbit LED_L_PIN = P1^3;
 
-/*å³ä¾§çº¢å¤–çš„ç®¡æ•™å®šä¹‰*/
+/*ÓÒ²àºìÍâµÄ¹Ü½Ì¶¨Òå*/
 sbit LED_R_PIN = P1^4;
 
-/*æ£€æµ‹æ˜¯å¦å­˜åœ¨çš„ADCçš„ç®¡æ•™å®šä¹‰*/
+/*¼ì²âÊÇ·ñ´æÔÚµÄADCµÄ¹Ü½Ì¶¨Òå*/
 sbit ADC_Exist_PIN = P1^0;
 
-/*å®šä¹‰PCAæ—¶é’Ÿæºå¤„äºŽSYSclk/8ï¼Œ38KHZçš„ç”Ÿæˆå¸¸æ•°*/
+/*¶¨ÒåPCAÊ±ÖÓÔ´´¦ÓÚSYSclk/8£¬38KHZµÄÉú³É³£Êý*/
 #define T38KHz (MAIN_Fosc / 16 / 38000)
 
-/*å®šä¹‰PCAæ—¶é’Ÿæºå¤„äºŽSYSclk/8ï¼Œ32HZçš„ç”Ÿæˆå¸¸æ•°*/
+/*¶¨ÒåPCAÊ±ÖÓÔ´´¦ÓÚSYSclk/8£¬32HZµÄÉú³É³£Êý*/
 #define T32HZ  (MAIN_Fosc / 16 / 32 )
 
-/*å®šä¹‰ç³»ç»Ÿæ˜¯å¦å¤„äºŽè°ƒè¯•ç‰ˆæœ¬*/
+/*¶¨ÒåÏµÍ³ÊÇ·ñ´¦ÓÚµ÷ÊÔ°æ±¾*/
 /*#define DEBUG*/
 
-/*ç³»ç»Ÿå¦‚æžœä¸å¤„äºŽè°ƒè¯•ç‰ˆæœ¬ï¼Œé»˜è®¤å¤„äºŽå‘å¸ƒç‰ˆæœ¬*/
+/*ÏµÍ³Èç¹û²»´¦ÓÚµ÷ÊÔ°æ±¾£¬Ä¬ÈÏ´¦ÓÚ·¢²¼°æ±¾*/
 #ifndef DEBUG
     #define RELEASE
 #endif

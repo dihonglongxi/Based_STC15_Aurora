@@ -1,0 +1,93 @@
+C51 COMPILER V9.53.0.0   AURORA_BASE_CONFIG                                                04/20/2016 15:10:56 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE AURORA_BASE_CONFIG
+OBJECT MODULE PLACED IN ..\ProjOut\Aurora_Base_Config.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\Aurora_Base_Config.c LARGE ROM(COMPACT) OPTIMIZ
+                    -E(8,SPEED) PRINT(..\ProjList\Aurora_Base_Config.lst) OBJECT(..\ProjOut\Aurora_Base_Config.obj)
+
+line level    source
+
+   1          /******************************************************************************
+   2            Copyright (C), 2015-2016,  Bpeer Robotics. Co., Ltd.
+   3            
+   4            File name: config.h
+   5          
+   6            Author: 郭世全    Version: v0.10.0    Date: 2016.02.19 
+   7          
+   8            Description:     用于配置IO和系统宏定义
+   9          
+  10            Others:         
+  11          
+  12            Function List:  
+  13          
+  14            History:        
+  15          
+  16              1. Date: 2016.02.19
+  17                 Author: 郭世全
+  18                 Modification: Create File and Frame    
+  19          ******************************************************************************/
+  20          
+  21          // <<< Use Configuration Wizard in Context Menu >>> 
+  22          
+  23          #ifndef __config_H
+  24          #define __config_H
+  25          
+  26          /*调用STC15W408AS系列单片机底层硬件定义文件*/
+  27          #include "..\ProgInc\STC15W408AS.H"
+*** WARNING C318 IN LINE 27 OF ..\ProgSource\Aurora_Base_Config.c: can't open file '..\ProgInc\STC15W408AS.H'
+  28          
+  29          /*非调试模式下可以删除,为了使用printf*/
+  30          #include "stdio.h"
+  31          #include "intrins.h"
+  32          
+  33          /*定义主时钟, 33.1776MHz*/
+  34          #define MAIN_Fosc       33177600L
+  35          
+  36          /*软件复位，自动下载，管脚定义*/
+  37          sbit System_IAP_REST_PIN = P3^0;
+*** ERROR C202 IN LINE 37 OF ..\ProgSource\Aurora_Base_Config.c: 'P3': undefined identifier
+  38          
+  39          /*信号指示灯管脚定义*/
+  40          sbit Signal_LED_PIN = P3^7;
+*** ERROR C202 IN LINE 40 OF ..\ProgSource\Aurora_Base_Config.c: 'P3': undefined identifier
+  41          
+  42          /*检查信号(开关信号)引脚定义*/
+  43          sbit Check_Signal_PIN = P3^4;
+*** ERROR C202 IN LINE 43 OF ..\ProgSource\Aurora_Base_Config.c: 'P3': undefined identifier
+  44          
+  45          /*全向红外的管脚定义*/
+  46          sbit LED_FF_PIN = P1^2;
+*** ERROR C202 IN LINE 46 OF ..\ProgSource\Aurora_Base_Config.c: 'P1': undefined identifier
+  47          
+  48          /*左侧红外的管脚定义*/
+  49          sbit LED_L_PIN = P1^3;
+C51 COMPILER V9.53.0.0   AURORA_BASE_CONFIG                                                04/20/2016 15:10:56 PAGE 2   
+
+*** ERROR C202 IN LINE 49 OF ..\ProgSource\Aurora_Base_Config.c: 'P1': undefined identifier
+  50          
+  51          /*右侧红外的管教定义*/
+  52          sbit LED_R_PIN = P1^4;
+*** ERROR C202 IN LINE 52 OF ..\ProgSource\Aurora_Base_Config.c: 'P1': undefined identifier
+  53          
+  54          /*检测是否存在的ADC的管教定义*/
+  55          sbit ADC_Exist_PIN = P1^0;
+*** ERROR C202 IN LINE 55 OF ..\ProgSource\Aurora_Base_Config.c: 'P1': undefined identifier
+  56          
+  57          /*定义PCA时钟源处于SYSclk/8，38KHZ的生成常数*/
+  58          #define T38KHz (MAIN_Fosc / 16 / 38000)
+  59          
+  60          /*定义PCA时钟源处于SYSclk/8，32HZ的生成常数*/
+  61          #define T32HZ  (MAIN_Fosc / 16 / 32 )
+  62          
+  63          /*定义系统是否处于调试版本*/
+  64          /*#define DEBUG*/
+  65          
+  66          /*系统如果不处于调试版本，默认处于发布版本*/
+  67          #ifndef DEBUG
+  68              #define RELEASE
+  69          #endif
+  70          
+  71          #endif /*__config_H */
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  7 ERROR(S)

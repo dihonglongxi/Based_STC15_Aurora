@@ -1,0 +1,124 @@
+C51 COMPILER V9.53.0.0   ADC                                                               04/20/2016 15:10:55 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE ADC
+OBJECT MODULE PLACED IN ..\ProjOut\adc.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE ..\ProgSource\adc.c LARGE ROM(COMPACT) OPTIMIZE(8,SPEED) PRIN
+                    -T(..\ProjList\adc.lst) OBJECT(..\ProjOut\adc.obj)
+
+line level    source
+
+   1          /******************************************************************************
+   2              Copyright (C), 2015-2016,  Bpeer Robotics. Co., Ltd.
+   3          
+   4              File name: adc.c
+   5          
+   6              Author: 郭世全    Version: v0.10.0    Date: 2016.02.19
+   7          
+   8              Description:      配置ADC函数和读取ADC函数的建立
+   9          
+  10              Others:         
+  11          
+  12              Function List:  
+  13          
+  14              1. void ADC_Init(void) 初始化ADC
+  15              2. unsigned char Get_ADC_Result(void) 获取采样结果
+  16          
+  17              History:        
+  18          
+  19              1. Date: 2016.02.19
+  20                 Author: 郭世全
+  21                 Modification: Create File and Frame    
+  22          ******************************************************************************/
+  23          
+  24          #include "..\ProgInc\adc.H"
+*** WARNING C318 IN LINE 22 OF ..\ProgInc\adc.H: can't open file '..\ProgInc\config.h'
+  25          
+  26          /******************************************************************************
+  27          
+  28            Function:       void ADC_Init(void)
+  29          
+  30            Description:    初始化ADC模块，P1.0口作为模拟功能A/D使用，540个时钟
+  31          
+  32            Calls:          1、void main(void);
+  33          
+  34            Called By:      None
+  35          
+  36            Input:          None
+  37          
+  38            Output:         None
+  39          
+  40            Return:         None
+  41          
+  42            Others:         None
+  43          
+  44            Version:        V0.10.0,2016-02-19
+  45          
+  46          ******************************************************************************/
+  47          void ADC_Init(void)
+  48          {
+  49   1          /*设置P1.0口作为模拟功能A/D使用*/
+  50   1          P1ASF = 0x01;     
+*** ERROR C202 IN LINE 50 OF ..\ProgSource\adc.c: 'P1ASF': undefined identifier
+  51   1      
+  52   1          /*清除结果寄存器*/              
+C51 COMPILER V9.53.0.0   ADC                                                               04/20/2016 15:10:55 PAGE 2   
+
+  53   1          ADC_RES  = 0;
+*** ERROR C202 IN LINE 53 OF ..\ProgSource\adc.c: 'ADC_RES': undefined identifier
+  54   1          ADC_RESL = 0;
+*** ERROR C202 IN LINE 54 OF ..\ProgSource\adc.c: 'ADC_RESL': undefined identifier
+  55   1          
+  56   1          /*P1.0输入，540个时钟，电源打开*/
+  57   1          ADC_CONTR = 0x80;
+*** ERROR C202 IN LINE 57 OF ..\ProgSource\adc.c: 'ADC_CONTR': undefined identifier
+  58   1      
+  59   1          /*ADC_RES:高8位，ADC_RESL：低2位*/
+  60   1          CLK_DIV &= 0xDF;
+*** ERROR C202 IN LINE 60 OF ..\ProgSource\adc.c: 'CLK_DIV': undefined identifier
+  61   1      }
+  62          
+  63          /******************************************************************************
+  64          
+  65            Function:       unsigned int Get_ADC_Result(void)
+  66          
+  67            Description:    获取P1.0的采样结果，10位
+  68          
+  69            Calls:          1、void main(void);
+  70          
+  71            Called By:      None
+  72          
+  73            Input:          None
+  74          
+  75            Output:         None
+  76          
+  77            Return:         None
+  78          
+  79            Others:         None
+  80          
+  81            Version:        V0.10.2,2016-02-22
+  82          
+  83          ******************************************************************************/
+  84          unsigned int Get_ADC_Result(void)
+  85          {
+  86   1         /*开启ADC转换*/
+  87   1         ADC_CONTR |= 0x08;
+*** ERROR C202 IN LINE 87 OF ..\ProgSource\adc.c: 'ADC_CONTR': undefined identifier
+  88   1      
+  89   1         /*等待4个指令周期*/
+  90   1         _nop_();                      
+  91   1         _nop_();
+  92   1         _nop_();
+  93   1         _nop_();
+  94   1      
+  95   1         /*等待ADC转换完成*/
+  96   1         while (!(ADC_CONTR & 0x10));
+  97   1      
+  98   1         /*关闭ADC转换，并清除标志位*/
+  99   1         ADC_CONTR &= 0xE7;        
+ 100   1      
+ 101   1         /*返回ADC采样结果，10位*/
+ 102   1         return (ADC_RES << 2) | ADC_RESL;      
+ 103   1      }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  6 ERROR(S)

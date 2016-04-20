@@ -3,9 +3,9 @@
   
   File name: tim.c
 
-  Author: éƒ­ä¸–å…¨    Version: v0.10.0    Date: 2016.02.19
+  Author: ¹ùÊÀÈ«    Version: v0.10.0    Date: 2016.02.19
 
-  Description:      timçš„ç›¸å…³å‡½æ•°çš„å®šä¹‰ï¼Œå¸¸æ•°å®å®šä¹‰ç­‰
+  Description:      timµÄÏà¹Øº¯ÊıµÄ¶¨Òå£¬³£Êıºê¶¨ÒåµÈ
 
   Others:         
 
@@ -14,7 +14,7 @@
   History:        
 
     1. Date: 2016.02.19
-       Author: éƒ­ä¸–å…¨
+       Author: ¹ùÊÀÈ«
        Modification: Create File and Frame    
 ******************************************************************************/
 #ifndef __tim_H
