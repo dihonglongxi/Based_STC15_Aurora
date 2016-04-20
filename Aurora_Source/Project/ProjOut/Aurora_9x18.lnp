@@ -1,3 +1,0 @@
-"..\ProjOut\Aurora_9x18.obj" 
-TO "..\ProjOut\Aurora_9x18" 
-PRINT("..\ProjList\Aurora_9x18.m51") RAMSIZE(256) 
