@@ -1,71 +1,100 @@
 /******************************************************************************
-  Copyright (C), 2015-2016,  Bpeer Robotics. Co., Ltd.
+  Copyright (C), 2013-2016,  DiHongLongXi£¨µÛø™ıˆêØ£©
   
-  File name: config.h
+  File name: Aurora_Base_Config.c
 
-  Author: éƒ­ä¸–å…¨    Version: v0.10.0    Date: 2016.02.19 
+  Author: DHLX    Version: v0.10.0    Date: 2016.04.26
 
-  Description:     ç”¨äºé…ç½®IOå’Œç³»ç»Ÿå®å®šä¹‰
+  Description: ³õÊ¼»¯Ğ¾Æ¬µÄ¸÷ÏîÍâÉè¡¢¹Ü½ÅÅäÖÃ    
 
   Others:         
 
   Function List:  
+  
+  Num. | function prototypes     | Description 
+    1. | void System_Init(void)  | ÏµÍ³ÅäÖÃ³õÊ¼»¯º¯Êı
 
   History:        
-
-    1. Date: 2016.02.19
-       Author: éƒ­ä¸–å…¨
-       Modification: Create File and Frame    
+    
+  Num. |    Date    |  Author  |  Modification
+    1. | 2016.04.26 |   DHLX   |  ´´½¨ÎÄ¼şºÍSystem_init()   
 ******************************************************************************/
 
-// <<< Use Configuration Wizard in Context Menu >>> 
+/* Includes -----------------------------------------------------------------*/
+#include "..\ProgInc\Aurora_Base_Config.H"
 
-#ifndef __config_H
-#define __config_H
+/* Private typedef ----------------------------------------------------------*/
 
-/*è°ƒç”¨STC15W408ASç³»åˆ—å•ç‰‡æœºåº•å±‚ç¡¬ä»¶å®šä¹‰æ–‡ä»¶*/
-#include "..\ProgInc\STC15W408AS.H"
+/* Private define -----------------------------------------------------------*/
 
-/*éè°ƒè¯•æ¨¡å¼ä¸‹å¯ä»¥åˆ é™¤,ä¸ºäº†ä½¿ç”¨printf*/
-#include "stdio.h"
-#include "intrins.h"
+/* Private macro ------------------------------------------------------------*/
 
-/*å®šä¹‰ä¸»æ—¶é’Ÿ, 33.1776MHz*/
-#define MAIN_Fosc       33177600L
+/* Private variables --------------------------------------------------------*/ 
 
-/*è½¯ä»¶å¤ä½ï¼Œè‡ªåŠ¨ä¸‹è½½ï¼Œç®¡è„šå®šä¹‰*/
-sbit System_IAP_REST_PIN = P3^0;
+/* Private constants --------------------------------------------------------*/
 
-/*ä¿¡å·æŒ‡ç¤ºç¯ç®¡è„šå®šä¹‰*/
-sbit Signal_LED_PIN = P3^7;
+/* Private function prototypes ----------------------------------------------*/
 
-/*æ£€æŸ¥ä¿¡å·(å¼€å…³ä¿¡å·)å¼•è„šå®šä¹‰*/
-sbit Check_Signal_PIN = P3^4;
+/* Private functions --------------------------------------------------------*/
 
-/*å…¨å‘çº¢å¤–çš„ç®¡è„šå®šä¹‰*/
-sbit LED_FF_PIN = P1^2;
+/******************************************************************************
 
-/*å·¦ä¾§çº¢å¤–çš„ç®¡è„šå®šä¹‰*/
-sbit LED_L_PIN = P1^3;
+  Function:       void System_Init(void)
 
-/*å³ä¾§çº¢å¤–çš„ç®¡æ•™å®šä¹‰*/
-sbit LED_R_PIN = P1^4;
+  Description:    ÏµÍ³ÅäÖÃ³õÊ¼»¯º¯Êı
 
-/*æ£€æµ‹æ˜¯å¦å­˜åœ¨çš„ADCçš„ç®¡æ•™å®šä¹‰*/
-sbit ADC_Exist_PIN = P1^0;
+  Calls:          None
 
-/*å®šä¹‰PCAæ—¶é’Ÿæºå¤„äºSYSclk/8ï¼Œ38KHZçš„ç”Ÿæˆå¸¸æ•°*/
-#define T38KHz (MAIN_Fosc / 16 / 38000)
+  Called By:      1¡¢void main(void)
 
-/*å®šä¹‰PCAæ—¶é’Ÿæºå¤„äºSYSclk/8ï¼Œ32HZçš„ç”Ÿæˆå¸¸æ•°*/
-#define T32HZ  (MAIN_Fosc / 16 / 32 )
+  Input:          None
 
-/*å®šä¹‰ç³»ç»Ÿæ˜¯å¦å¤„äºè°ƒè¯•ç‰ˆæœ¬*/
-/*#define DEBUG*/
+  Output:         None
 
-/*ç³»ç»Ÿå¦‚æœä¸å¤„äºè°ƒè¯•ç‰ˆæœ¬ï¼Œé»˜è®¤å¤„äºå‘å¸ƒç‰ˆæœ¬*/
-#ifndef DEBUG
-    #define RELEASE
-#endif
+  Return:         None
 
-#endif /*__config_H */
+  Others:         None
+
+  Version:        V0.10.0,2016-02-26
+
+******************************************************************************/
+
+/* Exported functions -------------------------------------------------------*/
+
+void System_Init(void)
+{
+  /*³õÊ¼»¯¹Ü½ÅÅäÖÃ£¬Ä¬ÈÏÊä³ö¸ßµçÆ½£¬Ë«Ïò*/
+  P0M0 = 0xFF;
+  P0M1 = 0xFF;
+  P0   = 0xFF;
+  
+  P0M0 = 0xFF;
+  P0M1 = 0xFF;
+  P0   = 0xFF;
+  
+  P0M0 = 0xFF;
+  P0M1 = 0xFF;
+  P0   = 0xFF;
+  
+  P0M0 = 0xFF;
+  P0M1 = 0xFF;
+  P0   = 0xFF;
+  
+  P0M0 = 0xFF;
+  P0M1 = 0xFF;
+  P0   = 0xFF;
+  
+  P0M0 = 0xFF;
+  P0M1 = 0xFF;
+  P0   = 0xFF;
+  
+  /*³õÊ¼»¯TimerÅäÖÃ*/
+  
+  /*³õÊ¼»¯ADÅäÖÃ£¬P10ÉèÖÃ³ÉAD¶Ë¿Ú*/
+  
+  /*³õÊ¼»¯PWMÅäÖÃ£¬Ä¬ÈÏÊÇP34¡¢P35¡¢P36¡¢P37£¬SYSCLK/2£¬7Î»£¬100%¸ßµçÆ½Êä³ö*/
+}
+
+
+
+/*********** (C) COPYRIGHT DiHongLongXi£¨µÛø™ıˆêØ£©*****END OF FILE************/

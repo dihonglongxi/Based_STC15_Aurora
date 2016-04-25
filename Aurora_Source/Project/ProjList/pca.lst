@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 1   
+C51 COMPILER V9.53.0.0   PCA                                                               04/23/2016 12:41:58 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE PCA
@@ -62,7 +62,7 @@ line level    source
   51          {
   52   1           /*初始化CCON：PCA定时器停止，清除CF标志，清除模块中断标志*/ 
   53   1           CCON = 0;
-C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 2   
+C51 COMPILER V9.53.0.0   PCA                                                               04/23/2016 12:41:58 PAGE 2   
 
 *** ERROR C202 IN LINE 53 OF ..\ProgSource\pca.c: 'CCON': undefined identifier
   54   1      
@@ -126,7 +126,7 @@ line level    source
 *** ERROR C202 IN LINE 102 OF ..\ProgSource\pca.c: 'CCON': undefined identifier
  103   1      
  104   1           /*初始化PCA计数器*/ 
-C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 3   
+C51 COMPILER V9.53.0.0   PCA                                                               04/23/2016 12:41:58 PAGE 3   
 
  105   1           CH = 0;
 *** ERROR C202 IN LINE 105 OF ..\ProgSource\pca.c: 'CH': undefined identifier
@@ -190,7 +190,7 @@ line level    source
  155   1           CCAP0H = 0x00;
 *** ERROR C202 IN LINE 155 OF ..\ProgSource\pca.c: 'CCAP0H': undefined identifier
  156   1          
-C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 4   
+C51 COMPILER V9.53.0.0   PCA                                                               04/23/2016 12:41:58 PAGE 4   
 
  157   1           /*设置管脚输出为底电平*/
  158   1           P3 &= 0xDF;
@@ -254,7 +254,7 @@ line level    source
  207          
  208            Description:    停止提供32HZ 50% 基础PWM
  209          
-C51 COMPILER V9.53.0.0   PCA                                                               04/20/2016 15:10:55 PAGE 5   
+C51 COMPILER V9.53.0.0   PCA                                                               04/23/2016 12:41:58 PAGE 5   
 
  210            Calls:          1、void main(void);
  211          

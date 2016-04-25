@@ -1,0 +1,4 @@
+2016年4月26日
+    项目初始化配置： Aurora 9x18，IAP15F2K60S2-SSOP20，Keil C51 4.92，SCH v1.0
+    
+    

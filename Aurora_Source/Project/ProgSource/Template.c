@@ -1,5 +1,5 @@
 /******************************************************************************
-  Copyright (C), 2013-2016,  DiHongLongXiï¼ˆå¸é´»é¾æ›¦ï¼‰
+  Copyright (C), 2013-2016,  DiHongLongXi£¨µÛø™ıˆêØ£©
   
   File name: config.h
 
@@ -10,6 +10,9 @@
   Others:         
 
   Function List:  
+  
+  Num. | function prototypes     | Description 
+    1. | void System_Init(void)  | ÏµÍ³ÅäÖÃ³õÊ¼»¯º¯Êı
 
   History:        
     
@@ -37,9 +40,9 @@
 
   Function:       void PCA_Init(void)
 
-  Description:    åˆå§‹åŒ–PCAæ¨¡å—çš„é€šç”¨è®¾ç½®ã€‚
+  Description:    ³õÊ¼»¯PCAÄ£¿éµÄÍ¨ÓÃÉèÖÃ¡£
 
-  Calls:          1ã€void main(void);
+  Calls:          1¡¢void main(void);
 
   Called By:      None
 
@@ -57,4 +60,4 @@
 
 /* Exported functions -------------------------------------------------------*/
 
-/*********** (C) COPYRIGHT DiHongLongXiï¼ˆå¸é´»é¾æ›¦ï¼‰*****END OF FILE************/
+/*********** (C) COPYRIGHT DiHongLongXi£¨µÛø™ıˆêØ£©*****END OF FILE************/

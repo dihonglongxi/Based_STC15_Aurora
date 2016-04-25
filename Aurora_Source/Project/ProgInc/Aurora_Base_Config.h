@@ -1,15 +1,15 @@
 /******************************************************************************
 //************ <<< Use Configuration Wizard in Context Menu >>> ***************
 //用于引导Keil Configuration Wized 启动，请勿删除
-//文件需要保存成ANSI格式，否则可能会产生乱码
+//文件需要保存成GBK（ANSI）格式，否则可能会产生乱码
 
   Copyright (C), 2013-2016,  DiHongLongXi（帝鴻龍曦）
   
-  File name: config.h
+  File name: Aurora_Base_Config.h
 
   Author: DHLX    Version: v0.10.0    Date: 2016.04.20
 
-  Description:     用于输出IO配置和其他功能配置所需的宏定义
+  Description:     用于输出输入IO配置和其他功能配置、常数所需的定义
 
   Others:         
 
@@ -19,61 +19,76 @@
     
   Num. |    Date    |  Author  |  Modification
     1. | 2016.04.20 |   DHLX   |  创建文件和文件框架   
+    2. | 2016.04.24 |   DHLX   |  定义外部文件需调用的宏定义、常量和函数原型
+    3. | 2016.04.26 |   DHLX   |  增加管脚、MOS开关断补偿时间的宏定义
 ******************************************************************************/
 
+/* Define to prevent recursive inclusion -------- ---------------------------*/
+#ifndef __Aurora_Base_Config_H
+#define __Aurora_Base_Config_H
 
+/* Includes -----------------------------------------------------------------*/
+#include "STC15F2K60S2.H"
 
-#ifndef __config_H
-#define __config_H
+/* Exported types -----------------------------------------------------------*/
 
-//     <o.0>   PAGES: Page Size      <0=> 1M Byte    <1=> 4M Bytes
-//                 <i> Selects Active Bits in Base Address
-#define Hardware_Model 0
+/* Exported constants -------------------------------------------------------*/
+#define Main_Fosc           27000000L
 
+/* Exported macro -----------------------------------------------------------*/
+#define Button_PIN          P32
+#define IR_PIN              P33
+#define Analog_Sound_PIN    P10
+/*P11-P12分别用于COL1-COL7*/
+#define COL_Low_Port        P1
+/*P54，P55分别用于COL8，COL9 */
+#define COL_High_Port       P5
+/*用于设置CCP_S0，CCP_S1选择引脚
+  0:(P1.2/ECI, P1.1/CCP0, P1.0/CCP1, P3.7/CCP2) 
+  1:(P3.4/ECI_2, P3.5/CCP0_2, P3.6/CCP1_2, P3.7/CCP2_2) 
+  2:(P2.4/ECI_3, P2.5/CCP0_3, P2.6/CCP1_3, P2.7/CCP2_3)*/
+#define RGB_Port            1
 
-/*调用STC15W408AS系列单片机底层硬件定义文件*/
-#include "..\ProgInc\STC15W408AS.H"
+/*定义管脚开关断时间补偿*/
+#define PIN_Time_Diff       0
 
-/*非调试模式下可以删除,为了使用printf*/
-#include "stdio.h"
-#include "intrins.h"
+/*定义上下管MOS开关断时间补偿*/
+#define High_MOS_Time_Diff  0
+#define Low_MOS_Time_Diff   0
 
-/*定义主时钟, 33.1776MHz*/
-#define MAIN_Fosc       33185792L
+/*以下定义是为了程序容易阅读，非必要，请勿更改*/
+#define BUS_OPEN()          CR = 1    
+#define BUS_CLOSE()         CR = 0 
 
-/*软件复位，自动下载，管脚定义*/
-sbit System_IAP_REST_PIN = P3^0;
-
-/*信号指示灯管脚定义*/
-sbit Signal_LED_PIN = P3^7;
-
-/*检查信号(开关信号)引脚定义*/
-sbit Check_Signal_PIN = P3^4;
-
-/*全向红外的管脚定义*/
-sbit LED_FF_PIN = P1^2;
-
-/*左侧红外的管脚定义*/
-sbit LED_L_PIN = P1^3;
-
-/*右侧红外的管教定义*/
-sbit LED_R_PIN = P1^4;
-
-/*检测是否存在的ADC的管教定义*/
-sbit ADC_Exist_PIN = P1^0;
-
-/*定义PCA时钟源处于SYSclk/8，38KHZ的生成常数*/
-#define T38KHz (MAIN_Fosc / 16 / 38000)
-
-/*定义PCA时钟源处于SYSclk/8，32HZ的生成常数*/
-#define T32HZ  (MAIN_Fosc / 16 / 32 )
+#define R_BUS_RMS           CCAP0H = CCAP0L
+#define G_BUS_RMS           CCAP1H = CCAP1L
+#define B_BUS_RMS           CCAP2H = CCAP2L
 
 /*定义系统是否处于调试版本*/
-/*#define DEBUG*/
+#define DEBUG
 
 /*系统如果不处于调试版本，默认处于发布版本*/
 #ifndef DEBUG
     #define RELEASE
 #endif
 
-#endif /*__config_H */
+/* Exported functions prototypes --------------------------------------------*/
+void System_Init (void);
+
+/* Private types ------------------------------------------------------------*/
+
+/* Private defines ----------------------------------------------------------*/
+
+/* Private variables --------------------------------------------------------*/
+
+/* Private constants --------------------------------------------------------*/
+
+/* Private macros -----------------------------------------------------------*/
+
+/* Private functions prototypes ---------------------------------------------*/
+
+/* Private functions --------------------------------------------------------*/
+
+
+#endif /* __Aurora_Base_Config_H */
+/*********** (C) COPYRIGHT DiHongLongXi（帝鴻龍曦） *****END OF FILE***********/
