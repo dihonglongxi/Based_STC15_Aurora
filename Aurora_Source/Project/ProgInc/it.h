@@ -3,9 +3,9 @@
   
   File name: it.h
 
-  Author: éƒ­ä¸–å…¨    Version: v0.10.0    Date: 2016.02.19 
+  Author: ¹ùÊÀÈ«    Version: v0.10.0    Date: 2016.02.19 
 
-  Description:     ä¸­æ–­ç›¸å…³å‡½æ•°çš„å®šä¹‰ï¼Œå¸¸æ•°åˆå§‹åŒ–
+  Description:     ÖĞ¶ÏÏà¹Øº¯ÊıµÄ¶¨Òå£¬³£Êı³õÊ¼»¯
 
   Others:         
 
@@ -14,26 +14,26 @@
   History:        
 
     1. Date: 2016.02.05
-       Author: éƒ­ä¸–å…¨
-       Modification: Create File and Frame    
+       Author: ¹ùÊÀÈ«
+       Modification: Create File and Frame  
 ******************************************************************************/
 #ifndef __it_H
 #define __it_H
 
 #include "..\ProgInc\config.h"
 
-/*PCAæ‰€éœ€å˜é‡å®šä¹‰ä¸åˆå§‹åŒ–*/
+/*PCAËùĞè±äÁ¿¶¨ÒåÓë³õÊ¼»¯*/
 extern unsigned int PCA0_value;
 extern unsigned int PCA1_value;
 
-/*TImeræ‰€éœ€è¦çš„å˜é‡å®šä¹‰ä¸åˆå§‹åŒ–*/
+/*TImerËùĞèÒªµÄ±äÁ¿¶¨ÒåÓë³õÊ¼»¯*/
 extern unsigned int Timer;
 extern unsigned int Signal_LED_PIN_Timer;
 extern unsigned int Check_Signal_Timer;
 extern unsigned int ADC_Timer;
 extern unsigned int IR_Timer;
 
-/*0ï¼šæœºå™¨äººæœªåœ¨å……ç”µæ¡©ï¼Œ1ï¼šæœºå™¨äººåœ¨å……ç”µæ¡©*/
+/*0£º»úÆ÷ÈËÎ´ÔÚ³äµç×®£¬1£º»úÆ÷ÈËÔÚ³äµç×®*/
 extern unsigned char System_State;
 
 #endif /*__it_H */
