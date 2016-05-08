@@ -44,10 +44,10 @@
 /*P54，P55分别用于COL8，COL9 */
 #define COL_High_Port       P5
 /*用于设置CCP_S0，CCP_S1选择引脚
-  0:(P1.2/ECI, P1.1/CCP0, P1.0/CCP1, P3.7/CCP2) 
-  1:(P3.4/ECI_2, P3.5/CCP0_2, P3.6/CCP1_2, P3.7/CCP2_2) 
-  2:(P2.4/ECI_3, P2.5/CCP0_3, P2.6/CCP1_3, P2.7/CCP2_3)*/
-#define RGB_Port            1
+  0x00:(P1.2/ECI, P1.1/CCP0, P1.0/CCP1, P3.7/CCP2) 
+  0x10:(P3.4/ECI_2, P3.5/CCP0_2, P3.6/CCP1_2, P3.7/CCP2_2) 
+  0x20:(P2.4/ECI_3, P2.5/CCP0_3, P2.6/CCP1_3, P2.7/CCP2_3)*/
+#define RGB_Port            0x10
 
 /*定义管脚开关断时间补偿*/
 #define PIN_Time_Diff       0

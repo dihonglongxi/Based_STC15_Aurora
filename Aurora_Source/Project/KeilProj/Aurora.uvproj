@@ -364,70 +364,25 @@
           <GroupName>ProgSource</GroupName>
           <Files>
             <File>
-              <FileName>it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ProgSource\it.c</FilePath>
-            </File>
-            <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ProgSource\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>pca.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ProgSource\pca.c</FilePath>
-            </File>
-            <File>
-              <FileName>tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ProgSource\tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ProgSource\usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>Aurora.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ProgSource\Aurora.c</FilePath>
-            </File>
-            <File>
               <FileName>Aurora_Base_Config.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ProgSource\Aurora_Base_Config.c</FilePath>
+            </File>
+            <File>
+              <FileName>Aurora_Main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ProgSource\Aurora_Main.c</FilePath>
+            </File>
+            <File>
+              <FileName>Aurora_IT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ProgSource\Aurora_IT.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>ProgInc</GroupName>
           <Files>
-            <File>
-              <FileName>adc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\ProgInc\adc.h</FilePath>
-            </File>
-            <File>
-              <FileName>it.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\ProgInc\it.h</FilePath>
-            </File>
-            <File>
-              <FileName>pca.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\ProgInc\pca.h</FilePath>
-            </File>
-            <File>
-              <FileName>tim.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\ProgInc\tim.h</FilePath>
-            </File>
-            <File>
-              <FileName>usart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\ProgInc\usart.h</FilePath>
-            </File>
             <File>
               <FileName>STC15F2K60S2.H</FileName>
               <FileType>5</FileType>
@@ -437,6 +392,11 @@
               <FileName>Aurora_Base_Config.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\ProgInc\Aurora_Base_Config.h</FilePath>
+            </File>
+            <File>
+              <FileName>Aurora_IT.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\ProgInc\Aurora_IT.h</FilePath>
             </File>
           </Files>
         </Group>
